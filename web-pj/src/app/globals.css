@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08080a;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --subtle: #71717a;
+  --hairline: rgba(255, 255, 255, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif-luxury);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: #08080a;
+}
+
+body {
+  background-color: #08080a;
+  color: #f4f4f5;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #27272a;
+  color: #ffffff;
+}
+
+/* Luxurious Hairline Borders & Glass */
+.luxury-border {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.luxury-border-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.luxury-border-t {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.luxury-card {
+  background: rgba(14, 14, 18, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card:hover {
+  background: rgba(20, 20, 26, 0.6);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Restrained Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #08080a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f1f23;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Editorial Serif & Headings */
+.font-serif-luxury {
+  font-family: var(--font-serif-luxury), "Times New Roman", Times, serif;
+}
