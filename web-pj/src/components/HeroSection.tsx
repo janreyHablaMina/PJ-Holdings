@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowDown, ArrowUpRight, Sparkles, CheckCircle2, Play } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Sparkles, CheckCircle2, Coffee } from "lucide-react";
 
 const TOTAL_FRAMES = 160;
 
@@ -16,37 +16,31 @@ interface StoryPhase {
 
 const STORY_PHASES: StoryPhase[] = [
   {
-    tag: "PHASE 01 // THE INITIATION",
-    badge: "WE CAN DO",
-    headline: "From Raw Vision to",
-    serifAccent: "Market Reality.",
+    tag: "PHASE 01 // THE INFUSION",
+    badge: "THE CRAFT OF EXTRACTION",
+    headline: "The Art of Absolute",
+    serifAccent: "Refinement & Alchemy.",
     narrative:
-      "We reject generic templates and empty promises. PJ Holdings is built on a singular conviction: to engineer bold, high-valuation digital platforms and iconic brands that command attention.",
-    services: ["Venture Strategy", "Brand Architecture", "Creative Direction"],
+      "Like cold extraction drop by drop, enduring ventures demand patience, pure ingredients, and deliberate precision. We distill raw vision into singular, irresistible digital clarity.",
+    services: ["Artisanal Mastery", "Sovereign Strategy", "Pure Formulation"],
   },
   {
-    tag: "PHASE 02 // PRECISION CRAFT",
-    badge: "HUMAN-DRIVEN EXECUTION",
-    headline: "Mastery at",
-    serifAccent: "Your Fingertips.",
+    tag: "PHASE 02 // KINETIC HARMONY",
+    badge: "ELEMENTS IN SUSPENSION",
+    headline: "Elements in Perfect",
+    serifAccent: "Kinetic Balance.",
     narrative:
-      "Strategic agency thinking meets relentless hands-on execution. Every line of code, camera angle, and narrative script is meticulously calibrated to captivate clients and elevate perception.",
-    services: ["Full-Stack Next.js", "Studio Photoshoots", "Compelling Scripting"],
+      "Roasted single-origin beans, warm caramel, and crystalline ice suspended in weightless harmony. We orchestrate high-tier design, spatial motion, and code into pure sensory impact.",
+    services: ["Spatial Direction", "Kinetic Motion", "Aesthetic Equilibrium"],
   },
   {
-    tag: "PHASE 03 // FULL ECOSYSTEM",
-    badge: "COMPLETE AGENCY POWER",
-    headline: "The Complete",
-    serifAccent: "Digital Powerhouse.",
+    tag: "PHASE 03 // THE APEX",
+    badge: "UNAPOLOGETIC PRESENCE",
+    headline: "The Signature",
+    serifAccent: "Momentum & Impact.",
     narrative:
-      "Web Development. High-Production Content. Full-Funnel Advertising. Social Media & CRM. An integrated ecosystem engineered to turn attention into unstoppable valuation.",
-    services: [
-      "Web Development",
-      "Content Creation",
-      "Advertising",
-      "Social Media",
-      "Travel CRM",
-    ],
+      "A volcanic eruption of energy, bold texture, and monolithic presence that commands the room. Fueling category creators, visionary founders, and modern legacy institutions.",
+    services: ["Brand Architecture", "Category Dominance", "Venture Scale"],
   },
 ];
 
@@ -60,7 +54,7 @@ export default function HeroSection() {
   const [currentFrameDisplay, setCurrentFrameDisplay] = useState(1);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  // Preload all 160 frames
+  // Preload all 160 coffee frames
   useEffect(() => {
     const images: HTMLImageElement[] = [];
     let loadedCounter = 0;
@@ -68,15 +62,15 @@ export default function HeroSection() {
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new window.Image();
       const paddedIndex = String(i).padStart(3, "0");
-      img.src = `/banner-frames/ezgif-frame-${paddedIndex}.jpg`;
+      img.src = `/coffee-frames/ezgif-frame-${paddedIndex}.jpg`;
 
       img.onload = () => {
         loadedCounter++;
-        // As soon as first frame is loaded, draw it immediately!
+        // Draw frame 0 immediately upon first load
         if (i === 1 && canvasRef.current) {
           drawFrame(0);
         }
-        if (loadedCounter >= TOTAL_FRAMES * 0.6) {
+        if (loadedCounter >= TOTAL_FRAMES * 0.5) {
           setImagesLoaded(true);
         }
       };
@@ -85,7 +79,7 @@ export default function HeroSection() {
 
     imagesRef.current = images;
 
-    // Initial draw
+    // Initial draw if cached
     if (images[0] && images[0].complete) {
       drawFrame(0);
     }
@@ -156,7 +150,6 @@ export default function HeroSection() {
 
     // Silky smooth render loop with lerp
     const renderLoop = () => {
-      // Smooth interpolation
       const diff = targetFrameRef.current - currentFrameRef.current;
       currentFrameRef.current += diff * 0.16;
 
@@ -183,7 +176,7 @@ export default function HeroSection() {
   const activePhase = STORY_PHASES[activePhaseIndex];
 
   return (
-    <section ref={containerRef} className="relative h-[340vh] bg-[#050608]">
+    <section ref={containerRef} className="relative h-[340vh] bg-[#0c0806]">
       {/* Sticky Fullscreen Canvas Viewport */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between px-6 md:px-12 py-8 z-10">
         
@@ -193,16 +186,16 @@ export default function HeroSection() {
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         />
 
-        {/* Cinematic Vignette & Readability Gradients */}
+        {/* Cinematic Warm Mocha & Charcoal Gradients for Flawless Readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-[#08080a]/80 pointer-events-none z-1" />
-        <div className="absolute inset-0 bg-radial from-transparent via-[#08080a]/30 to-[#08080a]/90 pointer-events-none z-1" />
-        <div className="absolute inset-y-0 left-0 w-full md:w-2/3 bg-gradient-to-r from-[#08080a]/90 via-[#08080a]/50 to-transparent pointer-events-none z-1" />
+        <div className="absolute inset-0 bg-radial from-transparent via-[#140b07]/30 to-[#08080a]/90 pointer-events-none z-1" />
+        <div className="absolute inset-y-0 left-0 w-full md:w-3/5 bg-gradient-to-r from-[#08080a]/95 via-[#08080a]/65 to-transparent pointer-events-none z-1" />
 
         {/* Top Bar: Live Frame Tracker & Chronicle Phases */}
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-12 md:pt-4">
-          <div className="flex items-center gap-3 text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span>PJ Holdings • Interactive Agency Chronicle</span>
+          <div className="flex items-center gap-3 text-[11px] font-mono tracking-[0.25em] text-amber-200/80 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span>PJ Holdings • Sensory Agency Chronicle</span>
           </div>
 
           {/* 3-Phase Scroll Tracker with Live Frame Number */}
@@ -217,14 +210,14 @@ export default function HeroSection() {
                 <div key={phase.tag} className="flex items-center gap-2">
                   <span
                     className={`transition-colors duration-300 ${
-                      isActive ? "text-cyan-300 font-bold" : "text-zinc-500"
+                      isActive ? "text-amber-300 font-bold" : "text-zinc-500"
                     }`}
                   >
                     PHASE 0{i + 1}
                   </span>
                   <div className="w-8 sm:w-12 h-[2px] bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className={`h-full bg-gradient-to-r from-cyan-400 to-white transition-all duration-300 ${
+                      className={`h-full bg-gradient-to-r from-amber-400 to-amber-100 transition-all duration-300 ${
                         isActive
                           ? "w-full"
                           : scrollProgress > (i + 1) / 3
@@ -239,11 +232,11 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Dynamic Storytelling Stage: Synchronized with Frame Progression */}
+        {/* Dynamic Storytelling Stage: Synchronized with Coffee Animation Progression */}
         <div className="relative z-10 max-w-4xl w-full my-auto py-6">
           {/* Phase Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/70 backdrop-blur-xl luxury-border text-[10px] font-mono tracking-[0.25em] text-cyan-300 uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/75 backdrop-blur-xl luxury-border text-[10px] font-mono tracking-[0.25em] text-amber-300 uppercase mb-6 border-amber-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
             <span>{activePhase.tag}</span>
             <span className="text-zinc-600">•</span>
             <span className="text-zinc-300">{activePhase.badge}</span>
@@ -252,7 +245,7 @@ export default function HeroSection() {
           {/* Changing Cinematic Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] font-light text-white tracking-[-0.03em] leading-[1.06] transition-all duration-300">
             {activePhase.headline}{" "}
-            <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-zinc-300 block sm:inline">
+            <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-100 to-white block sm:inline">
               {activePhase.serifAccent}
             </span>
           </h1>
@@ -262,14 +255,14 @@ export default function HeroSection() {
             {activePhase.narrative}
           </p>
 
-          {/* Live Services & Ecosystem Chips */}
+          {/* Live Services & Craft Chips */}
           <div className="mt-8 flex flex-wrap items-center gap-2">
             {activePhase.services.map((service) => (
               <span
                 key={service}
-                className="px-3.5 py-1.5 rounded-sm bg-black/60 backdrop-blur-md luxury-border text-xs font-mono text-zinc-200 flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-sm bg-black/60 backdrop-blur-md luxury-border text-xs font-mono text-zinc-200 flex items-center gap-1.5 border-amber-500/15"
               >
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
                 <span>{service}</span>
               </span>
             ))}
@@ -279,15 +272,15 @@ export default function HeroSection() {
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
               href="#inquiries"
-              className="px-8 py-4 bg-white text-[#08080a] text-xs font-medium tracking-[0.15em] uppercase hover:bg-zinc-200 transition-colors duration-200 flex items-center gap-2 shadow-xl shadow-cyan-950/20"
+              className="px-8 py-4 bg-amber-400 text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-amber-300 transition-colors duration-200 flex items-center gap-2 shadow-xl shadow-amber-950/20"
             >
-              <span>Launch Your Venture</span>
+              <span>Initiate Commission</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
 
             <a
               href="#works"
-              className="px-8 py-4 bg-black/60 backdrop-blur-md luxury-border text-zinc-300 hover:text-white text-xs font-medium tracking-[0.15em] uppercase hover:border-zinc-500 transition-all duration-200"
+              className="px-8 py-4 bg-black/60 backdrop-blur-md luxury-border text-zinc-300 hover:text-white text-xs font-medium tracking-[0.15em] uppercase hover:border-amber-500/30 transition-all duration-200"
             >
               Explore Portfolio
             </a>
@@ -298,21 +291,21 @@ export default function HeroSection() {
         <div className="relative z-10 max-w-7xl mx-auto w-full pt-4 luxury-border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-zinc-400 text-[10px] font-mono tracking-widest uppercase">
           {/* Coordinates */}
           <div className="flex items-center gap-4 text-zinc-400">
-            <span className="text-zinc-200">PJ Holdings Creative Capital</span>
+            <span className="text-zinc-200">PJ Holdings Creative Practice</span>
             <span className="text-zinc-600 hidden sm:inline">•</span>
-            <span className="hidden sm:inline">Mayfair • Zurich • Ginza • Manila</span>
+            <span className="hidden sm:inline">Mayfair • Zurich • Ginza • Milan</span>
           </div>
 
           {/* Scroll Prompt */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               <span>Scroll to animate frame-by-frame ({Math.round(scrollProgress * 100)}%)</span>
             </div>
 
             <a
               href="#works"
-              className="hidden sm:inline-flex items-center gap-1 text-white hover:text-cyan-300 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1 text-white hover:text-amber-300 transition-colors"
             >
               <span>Skip to Works</span>
               <ArrowDown className="w-3 h-3" />
