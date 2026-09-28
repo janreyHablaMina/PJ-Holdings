@@ -1,48 +1,105 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const TOTAL_FRAMES = 160;
 
 interface StoryPhase {
   tag: string;
-  badge: string;
   headline: string;
   serifAccent: string;
   narrative: string;
-  services: string[];
+  enterStart: number;
+  enterEnd: number;
+  exitStart: number;
+  exitEnd: number;
+  hasCta?: boolean;
 }
 
 const STORY_PHASES: StoryPhase[] = [
   {
-    tag: "PHASE 01 // THE INFUSION",
-    badge: "THE CRAFT OF EXTRACTION",
+    tag: "01 // THE INFUSION",
     headline: "The Art of Absolute",
-    serifAccent: "Refinement & Alchemy.",
-    narrative:
-      "Like cold extraction drop by drop, enduring ventures demand patience, pure ingredients, and deliberate precision. We distill raw vision into singular, irresistible digital clarity.",
-    services: ["Artisanal Mastery", "Sovereign Strategy", "Pure Formulation"],
+    serifAccent: "Refinement.",
+    narrative: "Deliberate precision distilled into singular digital clarity.",
+    enterStart: -0.1,
+    enterEnd: 0.0,
+    exitStart: 0.16,
+    exitEnd: 0.26,
   },
   {
-    tag: "PHASE 02 // KINETIC HARMONY",
-    badge: "ELEMENTS IN SUSPENSION",
-    headline: "Elements in Perfect",
-    serifAccent: "Kinetic Balance.",
-    narrative:
-      "Roasted single-origin beans, warm caramel, and crystalline ice suspended in weightless harmony. We orchestrate high-tier design, spatial motion, and code into pure sensory impact.",
-    services: ["Spatial Direction", "Kinetic Motion", "Aesthetic Equilibrium"],
+    tag: "02 // SUSPENSION",
+    headline: "Elements in Kinetic",
+    serifAccent: "Harmony.",
+    narrative: "Spatial motion, craft, and architectural poise in suspension.",
+    enterStart: 0.22,
+    enterEnd: 0.30,
+    exitStart: 0.46,
+    exitEnd: 0.56,
   },
   {
-    tag: "PHASE 03 // THE APEX",
-    badge: "UNAPOLOGETIC PRESENCE",
-    headline: "The Signature",
-    serifAccent: "Momentum & Impact.",
-    narrative:
-      "A volcanic eruption of energy, bold texture, and monolithic presence that commands the room. Fueling category creators, visionary founders, and modern legacy institutions.",
-    services: ["Brand Architecture", "Category Dominance", "Venture Scale"],
+    tag: "03 // THE APEX",
+    headline: "Unapologetic",
+    serifAccent: "Presence.",
+    narrative: "A volcanic eruption of craft. Fueling ventures built to endure.",
+    enterStart: 0.52,
+    enterEnd: 0.66,
+    exitStart: 1.0,
+    exitEnd: 1.0,
+    hasCta: true,
   },
 ];
+
+// Helper to compute smooth scroll-linked cross-dissolve and vertical drift
+function getPhraseStyle(
+  p: number,
+  enterStart: number,
+  enterEnd: number,
+  exitStart: number,
+  exitEnd: number
+) {
+  if (p < enterStart) {
+    return {
+      opacity: 0,
+      transform: "translateY(24px)",
+      pointerEvents: "none" as const,
+      visibility: "hidden" as const,
+    };
+  }
+  if (p < enterEnd) {
+    const t = (p - enterStart) / (enterEnd - enterStart);
+    return {
+      opacity: t,
+      transform: `translateY(${24 * (1 - t)}px)`,
+      pointerEvents: "none" as const,
+      visibility: "visible" as const,
+    };
+  }
+  if (p <= exitStart) {
+    return {
+      opacity: 1,
+      transform: "translateY(0px)",
+      pointerEvents: "auto" as const,
+      visibility: "visible" as const,
+    };
+  }
+  if (p < exitEnd) {
+    const t = (p - exitStart) / (exitEnd - exitStart);
+    return {
+      opacity: 1 - t,
+      transform: `translateY(${-24 * t}px)`,
+      pointerEvents: "none" as const,
+      visibility: "visible" as const,
+    };
+  }
+  return {
+    opacity: 0,
+    transform: "translateY(-24px)",
+    pointerEvents: "none" as const,
+    visibility: "hidden" as const,
+  };
+}
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,6 +107,8 @@ export default function HeroSection() {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef<number>(0);
   const targetFrameRef = useRef<number>(0);
+  const lastFrameDisplayRef = useRef<number>(1);
+  const [currentFrameDisplay, setCurrentFrameDisplay] = useState(1);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
@@ -143,8 +202,8 @@ export default function HeroSection() {
       const p = Math.min(Math.max(currentScroll / totalScrollable, 0), 1);
       setScrollProgress(p);
 
-      // Scrub frames over the first 38% of the scroll; hold the final frame for the remaining 62% (~10 scrolls)
-      const ANIMATION_END_PROGRESS = 0.38;
+      // Scrub frames over the first 68% of the scroll; hold the final frame for the remaining 32% (~3 full scrolls)
+      const ANIMATION_END_PROGRESS = 0.68;
       const frameProgress = Math.min(p / ANIMATION_END_PROGRESS, 1);
       targetFrameRef.current = frameProgress * (TOTAL_FRAMES - 1);
     };
@@ -160,6 +219,12 @@ export default function HeroSection() {
       const frameToDraw = Math.round(currentFrameRef.current);
       drawFrame(frameToDraw);
 
+      const frameNumber = Math.min(Math.max(frameToDraw + 1, 1), TOTAL_FRAMES);
+      if (lastFrameDisplayRef.current !== frameNumber) {
+        lastFrameDisplayRef.current = frameNumber;
+        setCurrentFrameDisplay(frameNumber);
+      }
+
       animationFrameId = requestAnimationFrame(renderLoop);
     };
 
@@ -171,19 +236,8 @@ export default function HeroSection() {
     };
   }, []);
 
-  // Compute active story phase (0, 1, or 2)
-  // Phase 03 stays active throughout the final frame hold period (~10 scrolls)
-  let activePhaseIndex = 0;
-  if (scrollProgress >= 0.27) {
-    activePhaseIndex = 2;
-  } else if (scrollProgress >= 0.13) {
-    activePhaseIndex = 1;
-  } else {
-    activePhaseIndex = 0;
-  }
-
   return (
-    <section ref={containerRef} className="relative h-[750vh] w-full bg-[#100a07]">
+    <section ref={containerRef} className="relative h-[480vh] w-full bg-[#100a07]">
       {/* Sticky Fullscreen 100vh Viewport */}
       <div className="sticky top-0 w-full h-screen h-[100vh] min-h-[100vh] overflow-hidden flex flex-col justify-center z-10">
         
@@ -198,91 +252,78 @@ export default function HeroSection() {
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none z-1" />
         <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#08080a] via-[#08080a]/40 to-transparent pointer-events-none z-1" />
 
-        {/* UI Content Layer - Vertically Centered Directional Storytelling */}
+        {/* UI Content Layer - Fluid Continuous Scroll Storytelling */}
         <div className="relative z-10 w-full h-full flex items-center px-6 sm:px-12 md:px-16 lg:px-24 pointer-events-none">
           <div className="grid grid-cols-1 grid-rows-1 max-w-xl w-full">
-            {STORY_PHASES.map((phase, i) => {
-              const isActive = activePhaseIndex === i;
-
-              // Directional animations:
-              // Phase 01: Enters from LEFT
-              // Phase 02: Enters from TOP
-              // Phase 03: Enters from BOTTOM
-              let animationClass = "";
-
-              if (i === 0) {
-                animationClass = isActive
-                  ? "translate-x-0 opacity-100 pointer-events-auto scale-100"
-                  : "-translate-x-24 opacity-0 pointer-events-none scale-95";
-              } else if (i === 1) {
-                animationClass = isActive
-                  ? "translate-y-0 opacity-100 pointer-events-auto scale-100"
-                  : "-translate-y-20 opacity-0 pointer-events-none scale-95";
-              } else {
-                animationClass = isActive
-                  ? "translate-y-0 opacity-100 pointer-events-auto scale-100"
-                  : "translate-y-20 opacity-0 pointer-events-none scale-95";
-              }
+            {STORY_PHASES.map((phase) => {
+              const style = getPhraseStyle(
+                scrollProgress,
+                phase.enterStart,
+                phase.enterEnd,
+                phase.exitStart,
+                phase.exitEnd
+              );
 
               return (
                 <div
                   key={phase.tag}
-                  className={`col-start-1 row-start-1 transition-all duration-700 ease-out ${animationClass}`}
+                  style={style}
+                  className="col-start-1 row-start-1 transition-[transform,opacity] duration-150 ease-out will-change-[transform,opacity]"
                 >
-                {/* Phase Badge - Compact Pill with Glow */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border border-amber-400/30 rounded-full text-[10px] font-mono tracking-[0.2em] text-amber-300 uppercase mb-4 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                  <span>{phase.tag}</span>
-                  <span className="text-zinc-500">•</span>
-                  <span className="text-zinc-300">{phase.badge}</span>
-                </div>
+                  {/* Subtle Monospaced Tag */}
+                  <div className="inline-flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] text-amber-300 uppercase mb-3 drop-shadow-md">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    <span>{phase.tag}</span>
+                  </div>
 
-                {/* Cinematic Headline with Deep High-Contrast Drop Shadow */}
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-light text-white tracking-[-0.03em] leading-[1.08] [text-shadow:_0_3px_20px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
-                  {phase.headline}{" "}
-                  <span className="font-serif italic font-normal text-amber-300 [text-shadow:_0_3px_20px_rgba(0,0,0,0.95)] block sm:inline">
-                    {phase.serifAccent}
-                  </span>
-                </h1>
-
-                {/* Narrative Subtitle */}
-                <p className="mt-4 text-xs sm:text-sm md:text-base text-zinc-100 font-light leading-relaxed max-w-xl [text-shadow:_0_2px_12px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                  {phase.narrative}
-                </p>
-
-                {/* Live Services & Craft Chips */}
-                <div className="mt-5 flex flex-wrap items-center gap-2">
-                  {phase.services.map((service) => (
-                    <span
-                      key={service}
-                      className="px-3 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/20 text-xs font-mono text-zinc-100 flex items-center gap-1.5 shadow-[0_4px_12px_rgba(0,0,0,0.7)]"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                      <span>{service}</span>
+                  {/* Editorial Serif Headline */}
+                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-light text-white tracking-[-0.03em] leading-[1.08] [text-shadow:_0_3px_24px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+                    {phase.headline}{" "}
+                    <span className="font-serif italic font-normal text-amber-300 [text-shadow:_0_3px_24px_rgba(0,0,0,0.95)] block sm:inline">
+                      {phase.serifAccent}
                     </span>
-                  ))}
-                </div>
+                  </h2>
 
-                {/* Actions */}
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <a
-                    href="#inquiries"
-                    className="px-6 py-3 bg-amber-400 text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-amber-300 transition-all duration-200 flex items-center gap-2 shadow-[0_4px_20px_rgba(245,158,11,0.35)] hover:scale-105"
-                  >
-                    <span>Initiate Commission</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
+                  {/* Refined One-Line Subtitle */}
+                  <p className="mt-3 text-xs sm:text-sm md:text-base text-zinc-200 font-light leading-relaxed max-w-md [text-shadow:_0_2px_12px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                    {phase.narrative}
+                  </p>
 
-                  <a
-                    href="#works"
-                    className="px-6 py-3 bg-black/60 backdrop-blur-md border border-white/25 text-white hover:text-amber-300 text-xs font-medium tracking-[0.15em] uppercase hover:border-amber-400/50 transition-all duration-200 shadow-[0_4px_15px_rgba(0,0,0,0.6)] hover:scale-105"
-                  >
-                    Explore Portfolio
-                  </a>
+                  {/* Action CTA Group (Grand Finale Phase Only) */}
+                  {phase.hasCta && (
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                      <a
+                        href="#inquiries"
+                        className="px-6 py-3 bg-amber-400 text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-amber-300 transition-all duration-200 flex items-center gap-2 shadow-[0_4px_24px_rgba(245,158,11,0.4)] hover:scale-105"
+                      >
+                        <span>Initiate Commission</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+
+                      <a
+                        href="#works"
+                        className="px-6 py-3 bg-black/60 backdrop-blur-md border border-white/25 text-white hover:text-amber-300 text-xs font-medium tracking-[0.15em] uppercase hover:border-amber-400/50 transition-all duration-200 shadow-lg hover:scale-105"
+                      >
+                        Explore Portfolio
+                      </a>
+                    </div>
+                  )}
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Bottom Right Live Frame Counter */}
+        <div className="absolute bottom-8 sm:bottom-10 right-6 sm:right-12 md:right-16 lg:right-24 pointer-events-auto z-20">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/55 backdrop-blur-xl border border-white/15 text-[11px] font-mono tracking-[0.25em] text-zinc-300 uppercase shadow-2xl">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-zinc-400">FRAME</span>
+            <span className="text-amber-300 font-semibold font-mono">
+              {String(currentFrameDisplay).padStart(3, "0")}
+            </span>
+            <span className="text-zinc-600">/</span>
+            <span className="text-zinc-400 font-mono">{TOTAL_FRAMES}</span>
           </div>
         </div>
 
