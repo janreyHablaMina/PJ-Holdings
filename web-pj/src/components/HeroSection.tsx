@@ -6,100 +6,30 @@ import { ArrowUpRight } from "lucide-react";
 const TOTAL_FRAMES = 160;
 
 interface StoryPhase {
-  tag: string;
+  id: string;
   headline: string;
   serifAccent: string;
   narrative: string;
-  enterStart: number;
-  enterEnd: number;
-  exitStart: number;
-  exitEnd: number;
+  align: "left" | "right";
   hasCta?: boolean;
 }
 
 const STORY_PHASES: StoryPhase[] = [
   {
-    tag: "01 // THE INFUSION",
+    id: "infusion",
     headline: "The Art of Absolute",
     serifAccent: "Refinement.",
-    narrative: "Deliberate precision distilled into singular digital clarity.",
-    enterStart: -0.1,
-    enterEnd: 0.0,
-    exitStart: 0.16,
-    exitEnd: 0.26,
+    narrative: "Deliberate cold extraction distilled into singular digital clarity.",
+    align: "left",
   },
   {
-    tag: "02 // SUSPENSION",
+    id: "suspension",
     headline: "Elements in Kinetic",
     serifAccent: "Harmony.",
     narrative: "Spatial motion, craft, and architectural poise in suspension.",
-    enterStart: 0.22,
-    enterEnd: 0.30,
-    exitStart: 0.46,
-    exitEnd: 0.56,
-  },
-  {
-    tag: "03 // THE APEX",
-    headline: "Unapologetic",
-    serifAccent: "Presence.",
-    narrative: "A volcanic eruption of craft. Fueling ventures built to endure.",
-    enterStart: 0.52,
-    enterEnd: 0.66,
-    exitStart: 1.0,
-    exitEnd: 1.0,
-    hasCta: true,
+    align: "right",
   },
 ];
-
-// Helper to compute smooth scroll-linked cross-dissolve and vertical drift
-function getPhraseStyle(
-  p: number,
-  enterStart: number,
-  enterEnd: number,
-  exitStart: number,
-  exitEnd: number
-) {
-  if (p < enterStart) {
-    return {
-      opacity: 0,
-      transform: "translateY(24px)",
-      pointerEvents: "none" as const,
-      visibility: "hidden" as const,
-    };
-  }
-  if (p < enterEnd) {
-    const t = (p - enterStart) / (enterEnd - enterStart);
-    return {
-      opacity: t,
-      transform: `translateY(${24 * (1 - t)}px)`,
-      pointerEvents: "none" as const,
-      visibility: "visible" as const,
-    };
-  }
-  if (p <= exitStart) {
-    return {
-      opacity: 1,
-      transform: "translateY(0px)",
-      pointerEvents: "auto" as const,
-      visibility: "visible" as const,
-    };
-  }
-  if (p < exitEnd) {
-    const t = (p - exitStart) / (exitEnd - exitStart);
-    return {
-      opacity: 1 - t,
-      transform: `translateY(${-24 * t}px)`,
-      pointerEvents: "none" as const,
-      visibility: "visible" as const,
-    };
-  }
-  return {
-    opacity: 0,
-    transform: "translateY(-24px)",
-    pointerEvents: "none" as const,
-    visibility: "hidden" as const,
-  };
-}
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -202,8 +132,8 @@ export default function HeroSection() {
       const p = Math.min(Math.max(currentScroll / totalScrollable, 0), 1);
       setScrollProgress(p);
 
-      // Scrub frames over the first 68% of the scroll; hold the final frame for the remaining 32% (~3 full scrolls)
-      const ANIMATION_END_PROGRESS = 0.68;
+      // Scrub frames over the first 88% of the scroll; hold the final frame for the remaining 12% (~1 scroll)
+      const ANIMATION_END_PROGRESS = 0.88;
       const frameProgress = Math.min(p / ANIMATION_END_PROGRESS, 1);
       targetFrameRef.current = frameProgress * (TOTAL_FRAMES - 1);
     };
@@ -236,8 +166,47 @@ export default function HeroSection() {
     };
   }, []);
 
+  // Phase 0 (Left): 0 - 0.38 | Phase 1 (Right): 0.38 - 0.74 | Phase 2 (Full Banner Solo): 0.74 - 1.0
+  const activePhaseIndex =
+    scrollProgress >= 0.74 ? 2 : scrollProgress >= 0.38 ? 1 : 0;
+
+  const getPhaseAnimation = (index: number, activeIndex: number) => {
+    const isActive = index === activeIndex;
+    const isPast = index < activeIndex;
+
+    if (isActive) {
+      return {
+        wrapper: "opacity-100 translate-x-0 translate-y-0 scale-100 blur-0 pointer-events-auto",
+        headline: "opacity-100 translate-x-0 translate-y-0",
+        line: "w-12 opacity-100",
+        narrative: "opacity-100 translate-x-0 translate-y-0",
+        cta: "opacity-100 translate-y-0 scale-100 pointer-events-auto",
+      };
+    }
+
+    if (isPast) {
+      // Exiting upward smoothly as user scrolls down
+      return {
+        wrapper: "opacity-0 -translate-y-12 scale-95 blur-[2px] pointer-events-none",
+        headline: "opacity-0 -translate-y-8",
+        line: "w-0 opacity-0",
+        narrative: "opacity-0 -translate-y-6",
+        cta: "opacity-0 -translate-y-6 scale-95 pointer-events-none",
+      };
+    }
+
+    // Future phase (Phase 02 on the right side, entering from the RIGHT)
+    return {
+      wrapper: "opacity-0 translate-x-16 scale-95 blur-[2px] pointer-events-none",
+      headline: "opacity-0 translate-x-8",
+      line: "w-0 opacity-0",
+      narrative: "opacity-0 translate-x-6",
+      cta: "opacity-0 translate-y-6 scale-95 pointer-events-none",
+    };
+  };
+
   return (
-    <section ref={containerRef} className="relative h-[480vh] w-full bg-[#100a07]">
+    <section ref={containerRef} className="relative h-[400vh] w-full bg-[#100a07]">
       {/* Sticky Fullscreen 100vh Viewport */}
       <div className="sticky top-0 w-full h-screen h-[100vh] min-h-[100vh] overflow-hidden flex flex-col justify-center z-10">
         
@@ -252,57 +221,66 @@ export default function HeroSection() {
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none z-1" />
         <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#08080a] via-[#08080a]/40 to-transparent pointer-events-none z-1" />
 
-        {/* UI Content Layer - Fluid Continuous Scroll Storytelling */}
+        {/* UI Content Layer - Fluid Kinetic Scroll Storytelling */}
         <div className="relative z-10 w-full h-full flex items-center px-6 sm:px-12 md:px-16 lg:px-24 pointer-events-none">
-          <div className="grid grid-cols-1 grid-rows-1 max-w-xl w-full">
-            {STORY_PHASES.map((phase) => {
-              const style = getPhraseStyle(
-                scrollProgress,
-                phase.enterStart,
-                phase.enterEnd,
-                phase.exitStart,
-                phase.exitEnd
-              );
+          {/* Full-width Single-cell CSS Grid: all phases share the exact same layer without layout shifts */}
+          <div className="grid grid-cols-1 grid-rows-1 w-full relative">
+            {STORY_PHASES.map((phase, idx) => {
+              const anim = getPhaseAnimation(idx, activePhaseIndex);
+              const isRight = phase.align === "right";
 
               return (
                 <div
-                  key={phase.tag}
-                  style={style}
-                  className="col-start-1 row-start-1 transition-[transform,opacity] duration-150 ease-out will-change-[transform,opacity]"
+                  key={phase.id}
+                  className={`col-start-1 row-start-1 w-full max-w-xl relative transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity,filter] ${
+                    isRight ? "justify-self-end text-left sm:text-right" : "justify-self-start text-left"
+                  } ${anim.wrapper}`}
                 >
-                  {/* Subtle Monospaced Tag */}
-                  <div className="inline-flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] text-amber-300 uppercase mb-3 drop-shadow-md">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span>{phase.tag}</span>
-                  </div>
-
-                  {/* Editorial Serif Headline */}
-                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-light text-white tracking-[-0.03em] leading-[1.08] [text-shadow:_0_3px_24px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
-                    {phase.headline}{" "}
-                    <span className="font-serif italic font-normal text-amber-300 [text-shadow:_0_3px_24px_rgba(0,0,0,0.95)] block sm:inline">
+                  {/* Editorial Shimmer Headline */}
+                  <h2
+                    className={`text-3xl sm:text-5xl lg:text-6xl font-light text-white tracking-[-0.03em] leading-[1.08] [text-shadow:_0_4px_24px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] transition-all duration-700 delay-100 ease-[cubic-bezier(0.16,1,0.3,1)] ${anim.headline}`}
+                  >
+                    <span className="bg-gradient-to-r from-amber-100 via-amber-300 to-amber-100 bg-clip-text text-transparent">
+                      {phase.headline}{" "}
+                    </span>
+                    <span className="font-serif italic font-normal text-amber-300 [text-shadow:_0_4px_24px_rgba(0,0,0,0.95)] block sm:inline">
                       {phase.serifAccent}
                     </span>
                   </h2>
 
-                  {/* Refined One-Line Subtitle */}
-                  <p className="mt-3 text-xs sm:text-sm md:text-base text-zinc-200 font-light leading-relaxed max-w-md [text-shadow:_0_2px_12px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                    {phase.narrative}
-                  </p>
+                  {/* Expanding Hairline Accent & Narrative */}
+                  <div
+                    className={`mt-5 flex items-center gap-3 ${
+                      isRight ? "sm:flex-row-reverse sm:justify-start" : ""
+                    }`}
+                  >
+                    <div
+                      className={`h-[1px] bg-gradient-to-r from-amber-400 to-amber-400/20 transition-all duration-700 delay-150 ease-out ${anim.line}`}
+                    />
+                    <p
+                      className={`text-xs sm:text-sm md:text-base text-zinc-200 font-light leading-relaxed max-w-md [text-shadow:_0_2px_14px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] transition-all duration-700 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${anim.narrative}`}
+                    >
+                      {phase.narrative}
+                    </p>
+                  </div>
 
-                  {/* Action CTA Group (Grand Finale Phase Only) */}
+                  {/* Action CTA Group (Phase 03 Grand Finale) */}
                   {phase.hasCta && (
-                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                    <div
+                      className={`mt-8 flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${anim.cta}`}
+                    >
                       <a
                         href="#inquiries"
-                        className="px-6 py-3 bg-amber-400 text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-amber-300 transition-all duration-200 flex items-center gap-2 shadow-[0_4px_24px_rgba(245,158,11,0.4)] hover:scale-105"
+                        className="group relative px-7 py-3.5 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-black text-xs font-bold tracking-[0.18em] uppercase transition-all duration-300 flex items-center gap-2.5 shadow-[0_0_30px_rgba(245,158,11,0.35)] hover:shadow-[0_0_40px_rgba(245,158,11,0.65)] hover:scale-105 active:scale-95 rounded-sm overflow-hidden"
                       >
-                        <span>Initiate Commission</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
+                        <span className="relative z-10">Initiate Commission</span>
+                        <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </a>
 
                       <a
                         href="#works"
-                        className="px-6 py-3 bg-black/60 backdrop-blur-md border border-white/25 text-white hover:text-amber-300 text-xs font-medium tracking-[0.15em] uppercase hover:border-amber-400/50 transition-all duration-200 shadow-lg hover:scale-105"
+                        className="px-7 py-3.5 bg-black/40 backdrop-blur-md border border-white/25 text-white hover:text-amber-300 text-xs font-medium tracking-[0.18em] uppercase hover:border-amber-400/60 transition-all duration-300 shadow-xl hover:scale-105 active:scale-95 rounded-sm"
                       >
                         Explore Portfolio
                       </a>
@@ -316,7 +294,7 @@ export default function HeroSection() {
 
         {/* Bottom Right Live Frame Counter */}
         <div className="absolute bottom-8 sm:bottom-10 right-6 sm:right-12 md:right-16 lg:right-24 pointer-events-auto z-20">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/55 backdrop-blur-xl border border-white/15 text-[11px] font-mono tracking-[0.25em] text-zinc-300 uppercase shadow-2xl">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/15 text-[11px] font-mono tracking-[0.25em] text-zinc-300 uppercase shadow-2xl">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-zinc-400">FRAME</span>
             <span className="text-amber-300 font-semibold font-mono">
