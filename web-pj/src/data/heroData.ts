@@ -1,0 +1,60 @@
+export const slides = [
+  {
+    number: "01",
+    kicker: "Brand systems",
+    title: "Build the brand.",
+    accent: "Make it impossible to ignore.",
+    body: "We shape the identity, story, and visual language that give a venture its first real gravity.",
+    image: "/coffee-frames/ezgif-frame-040.jpg",
+    metric: "Identity",
+    tags: ["Naming", "Direction", "Launch"],
+  },
+  {
+    number: "02",
+    kicker: "Venture design",
+    title: "Shape the business.",
+    accent: "Turn the idea into structure.",
+    body: "From offer design to operating models, PJ Holdings turns ambition into a company people can understand and trust.",
+    image: "/coffee-frames/ezgif-frame-120.jpg",
+    metric: "Venture",
+    tags: ["Strategy", "Systems", "Growth"],
+  },
+  {
+    number: "03",
+    kicker: "Digital experience",
+    title: "Launch the platform.",
+    accent: "Make the work feel alive.",
+    body: "We build digital flagships, portals, and interactive experiences that carry the brand beyond the first impression.",
+    image: "/banner-frames/ezgif-frame-080.jpg",
+    metric: "Digital",
+    tags: ["Web", "Product", "3D"],
+  },
+  {
+    number: "04",
+    kicker: "Creative production",
+    title: "Show the detail.",
+    accent: "Give the brand dimension.",
+    body: "Product imagery, visual direction, and 3D design bring your ideas into focus.",
+    image: "/coffee-frames/ezgif-frame-001.jpg",
+    metric: "Creative",
+    tags: ["Visuals", "Content", "3D"],
+  },
+  {
+    number: "05",
+    kicker: "Connected experiences",
+    title: "Bring it together.",
+    accent: "Keep the business moving.",
+    body: "We connect brand, content, and digital tools into a consistent experience across your business.",
+    image: "/banner-frames/ezgif-frame-160.jpg",
+    metric: "Connection",
+    tags: ["Brand", "Platforms", "Content"],
+  },
+];
+
+export const disciplines = [
+  { number: "01", title: "Venture development" },
+  { number: "02", title: "Brand identity" },
+  { number: "03", title: "Digital experiences" },
+  { number: "04", title: "Spatial & 3D design" },
+];
+

@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { CAPABILITIES } from "@/data/agencyData";
 import { ArrowUpRight } from "lucide-react";
 

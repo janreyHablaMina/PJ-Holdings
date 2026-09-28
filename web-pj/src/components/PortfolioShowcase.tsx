@@ -1,21 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { SELECTED_WORKS, ProjectItem } from "@/data/agencyData";
+import { SELECTED_WORKS, type ProjectItem } from "@/data/agencyData";
 import { ArrowUpRight, X } from "lucide-react";
+
+const categories = ["All", ...new Set(SELECTED_WORKS.map((work) => work.category))];
 
 export default function PortfolioShowcase() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
-
-  const categories = [
-    "All",
-    "Ventures",
-    "Digital Flagships",
-    "Brand Identity",
-    "Spatial Design",
-  ];
 
   const filtered =
     activeCategory === "All"
@@ -148,6 +142,7 @@ export default function PortfolioShowcase() {
                 src={activeProject.image}
                 alt={activeProject.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 672px"
                 className="object-cover"
               />
             </div>

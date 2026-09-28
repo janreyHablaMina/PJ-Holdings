@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { MONOGRAPH_PRINCIPLES } from "@/data/agencyData";
 import { ArrowRight } from "lucide-react";
@@ -102,7 +102,6 @@ export default function StorytellingSection() {
                 src={principle.image}
                 alt={principle.title}
                 fill
-                priority
                 className="object-cover grayscale contrast-[1.08] hover:grayscale-0 transition-all duration-700 ease-out"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />

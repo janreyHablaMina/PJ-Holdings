@@ -6,10 +6,11 @@ import ServicesCapabilities from "@/components/ServicesCapabilities";
 import TestimonialsMetrics from "@/components/TestimonialsMetrics";
 import ProjectEstimatorSection from "@/components/ProjectEstimatorSection";
 import Footer from "@/components/Footer";
+import ServicesMarquee from "@/components/ServicesMarquee";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#06070a] text-zinc-100 flex flex-col selection:bg-amber-400 selection:text-black">
+    <main id="top" className="min-h-screen bg-[#06070a] text-zinc-100 flex flex-col selection:bg-amber-400 selection:text-black">
       {/* Floating Navigation */}
       <Navbar />
 
@@ -21,6 +22,9 @@ export default function Home() {
 
       {/* Selected Work & Case Studies Showcase */}
       <PortfolioShowcase />
+
+      {/* Scrolling Services Marquee */}
+      <ServicesMarquee />
 
       {/* Core Capabilities & Disciplines */}
       <ServicesCapabilities />

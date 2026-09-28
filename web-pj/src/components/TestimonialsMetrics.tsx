@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ENDORSEMENTS, CORE_METRICS } from "@/data/agencyData";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 

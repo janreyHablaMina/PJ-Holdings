@@ -4,11 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
-const navigation = [
-  { label: "About", href: "#monograph" },
-  { label: "Our work", href: "#works" },
-  { label: "Expertise", href: "#capabilities" },
-];
+import { navigation } from "@/data/navigation";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

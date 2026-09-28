@@ -1,11 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 
+const natures = [
+  "Venture Incubation & Architecture",
+  "Digital Flagship & Platform",
+  "Brand Identity & Strategy",
+  "Spatial 3D & Interactive WebGL",
+];
+
+const allocations = [
+  "£35,000 – £60,000",
+  "£60,000 – £120,000",
+  "£120,000 – £250,000+",
+  "Strategic Equity / Co-Venture",
+];
+
+const contactFields = [
+  { name: "name", type: "text", label: "Your Name *", required: true, autoComplete: "name" },
+  { name: "email", type: "email", label: "Direct Email *", required: true, autoComplete: "email" },
+  { name: "title", type: "text", label: "Title / Role (e.g. Founder, CEO)", required: false, autoComplete: "organization-title" },
+  { name: "institution", type: "text", label: "Company or Venture Name", required: false, autoComplete: "organization" },
+] as const;
+
 export default function ProjectEstimatorSection() {
-  const [nature, setNature] = useState("Digital Flagship & Platform");
-  const [allocation, setAllocation] = useState("£60k – £120k");
+  const [nature, setNature] = useState(natures[1]);
+  const [allocation, setAllocation] = useState(allocations[1]);
   const [formData, setFormData] = useState({
     name: "",
     title: "",
@@ -16,21 +37,7 @@ export default function ProjectEstimatorSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const natures = [
-    "Venture Incubation & Architecture",
-    "Digital Flagship & Platform",
-    "Brand Identity & Strategy",
-    "Spatial 3D & Interactive WebGL",
-  ];
-
-  const allocations = [
-    "£35,000 – £60,000",
-    "£60,000 – £120,000",
-    "£120,000 – £250,000+",
-    "Strategic Equity / Co-Venture",
-  ];
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -130,52 +137,27 @@ export default function ProjectEstimatorSection() {
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+                {contactFields.map((field) => (
                   <input
-                    type="text"
-                    required
-                    placeholder="Your Name *"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    key={field.name}
+                    name={field.name}
+                    type={field.type}
+                    required={field.required}
+                    aria-label={field.label}
+                    autoComplete={field.autoComplete}
+                    placeholder={field.label}
+                    value={formData[field.name]}
+                    onChange={(event) => setFormData((previous) => ({ ...previous, [field.name]: event.target.value }))}
                     className="w-full p-4 bg-[#0c0c10] luxury-border text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors font-light"
                   />
-                </div>
-
-                <div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Direct Email *"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full p-4 bg-[#0c0c10] luxury-border text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors font-light"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Title / Role (e.g. Founder, CEO)"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full p-4 bg-[#0c0c10] luxury-border text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors font-light"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Company or Venture Name"
-                    value={formData.institution}
-                    onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-                    className="w-full p-4 bg-[#0c0c10] luxury-border text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors font-light"
-                  />
-                </div>
+                ))}
               </div>
 
               <div className="mt-4">
                 <textarea
                   rows={4}
+                  name="brief"
+                  aria-label="Project brief"
                   placeholder="Summary of the venture, aspirations, or challenge..."
                   value={formData.brief}
                   onChange={(e) => setFormData({ ...formData, brief: e.target.value })}
