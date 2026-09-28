@@ -1,128 +1,108 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
+
+const navigation = [
+  { label: "About", href: "#monograph" },
+  { label: "Our work", href: "#works" },
+  { label: "Expertise", href: "#capabilities" },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "py-4 bg-[#08080a]/90 backdrop-blur-md border-b border-white/[0.06]"
-          : "py-6 bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 px-6 transition-colors duration-300 motion-reduce:transition-none md:px-12 ${
+        scrolled || mobileMenuOpen
+          ? "bg-[#08080a]/95 backdrop-blur-xl"
+          : "bg-[#08080a]/70 backdrop-blur-md"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        {/* Brand Mark */}
-        <a href="#" className="flex items-baseline gap-3 group">
-          <span className="font-medium tracking-[0.2em] text-sm text-zinc-100 uppercase">
-            PJ Holdings
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 border-b border-white/[0.08] md:h-24">
+        <a
+          href="#"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-label="PJ Holdings home"
+          className="group flex shrink-0 items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
+        >
+          <span aria-hidden="true" className="relative block h-12 w-12 overflow-hidden rounded-full border border-amber-300/25 bg-black shadow-[0_0_24px_rgba(217,160,45,0.12)] transition-colors group-hover:border-amber-200/45">
+            <Image
+              src="/logo.png"
+              alt=""
+              width={96}
+              height={96}
+              priority
+              sizes="48px"
+              className="h-full w-full object-cover"
+            />
           </span>
-          <span className="hidden sm:inline-block text-[10px] tracking-[0.25em] text-zinc-400 uppercase font-mono">
-            / Private Practice
+          <span className="text-sm font-medium tracking-[-0.02em] text-zinc-100">
+            PJ Holdings<span className="text-zinc-500">.</span>
           </span>
         </a>
 
-        {/* Minimalist Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          <a
-            href="#monograph"
-            className="text-xs uppercase tracking-[0.18em] text-zinc-400 hover:text-white transition-colors duration-200"
-          >
-            Principles
-          </a>
-          <a
-            href="#works"
-            className="text-xs uppercase tracking-[0.18em] text-zinc-400 hover:text-white transition-colors duration-200"
-          >
-            Selected Works
-          </a>
-          <a
-            href="#capabilities"
-            className="text-xs uppercase tracking-[0.18em] text-zinc-400 hover:text-white transition-colors duration-200"
-          >
-            Disciplines
-          </a>
+        <button
+          ref={menuButtonRef}
+          type="button"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="primary-navigation"
+          className="flex h-11 w-11 items-center justify-center rounded-sm border border-white/10 text-zinc-300 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 md:hidden"
+        >
+          {mobileMenuOpen ? <X aria-hidden="true" className="h-4 w-4" /> : <Menu aria-hidden="true" className="h-4 w-4" />}
+        </button>
+
+        <nav
+          id="primary-navigation"
+          aria-label="Main navigation"
+          className={`${mobileMenuOpen ? "flex" : "hidden"} absolute inset-x-0 top-full flex-col gap-1 border-b border-white/[0.08] bg-[#08080a] px-6 pb-6 pt-3 md:static md:flex md:flex-row md:items-center md:gap-7 md:border-0 md:bg-transparent md:p-0 lg:gap-10`}
+        >
+          {navigation.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex min-h-11 items-center text-sm text-zinc-400 transition-colors hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 md:text-xs"
+            >
+              {item.label}
+            </a>
+          ))}
           <a
             href="#inquiries"
-            className="text-xs uppercase tracking-[0.18em] text-zinc-400 hover:text-white transition-colors duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+            className="group mt-3 inline-flex min-h-11 items-center justify-between gap-6 rounded-sm border border-white/20 px-5 py-3 text-xs font-medium text-zinc-100 transition-colors hover:border-zinc-100 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 md:ml-3 md:mt-0"
           >
-            Commission
+            Let&apos;s talk
+            <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none" />
           </a>
         </nav>
-
-        {/* Right CTA */}
-        <div className="hidden md:flex items-center gap-6">
-          <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
-            London • Zurich • Tokyo
-          </span>
-
-          <a
-            href="#inquiries"
-            className="group inline-flex items-center gap-1.5 text-xs font-medium tracking-[0.15em] uppercase text-zinc-200 hover:text-white pb-0.5 border-b border-white/20 hover:border-white transition-all duration-200"
-          >
-            <span>Initiate Dialogue</span>
-            <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
-          </a>
-        </div>
-
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-zinc-400 hover:text-white"
-          aria-label="Toggle navigation"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
       </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#08080a]/98 backdrop-blur-xl border-b border-white/[0.08] px-6 py-8 flex flex-col gap-5 animate-in slide-in-from-top-2 duration-300">
-          <a
-            href="#monograph"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm tracking-[0.15em] uppercase text-zinc-300 hover:text-white py-2 border-b border-white/[0.04]"
-          >
-            Principles & Monograph
-          </a>
-          <a
-            href="#works"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm tracking-[0.15em] uppercase text-zinc-300 hover:text-white py-2 border-b border-white/[0.04]"
-          >
-            Selected Works
-          </a>
-          <a
-            href="#capabilities"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm tracking-[0.15em] uppercase text-zinc-300 hover:text-white py-2 border-b border-white/[0.04]"
-          >
-            Disciplines
-          </a>
-          <a
-            href="#inquiries"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm tracking-[0.15em] uppercase text-zinc-300 hover:text-white py-2 border-b border-white/[0.04]"
-          >
-            Private Inquiries
-          </a>
-          <div className="pt-2 text-xs font-mono text-zinc-400">
-            London • Zurich • Tokyo
-          </div>
-        </div>
-      )}
     </header>
   );
 }

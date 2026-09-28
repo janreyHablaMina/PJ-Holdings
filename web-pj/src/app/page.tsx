@@ -13,7 +13,7 @@ export default function Home() {
       {/* Floating Navigation */}
       <Navbar />
 
-      {/* Hero Section with Interactive 3D WebGL Canvas */}
+      {/* Company introduction & expertise */}
       <HeroSection />
 
       {/* Brand Storytelling & Philosophy */}
