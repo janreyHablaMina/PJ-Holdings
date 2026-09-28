@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#06070a] text-zinc-100 flex flex-col selection:bg-cyan-400 selection:text-black">
+    <main className="min-h-screen bg-[#06070a] text-zinc-100 flex flex-col selection:bg-amber-400 selection:text-black">
       {/* Floating Navigation */}
       <Navbar />
 
