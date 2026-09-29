@@ -12,6 +12,7 @@ export interface ProjectItem {
   statement: string;
   link?: string;
   imagePosition?: string;
+  modalImage?: string;
 }
 
 export interface MonographPrinciple {
@@ -41,6 +42,39 @@ export interface CoreMetric {
 
 export const SELECTED_WORKS: ProjectItem[] = [
   {
+    id: "teachify-ai-lms",
+    title: "Teachify AI",
+    client: "Teachify • EdTech Solutions",
+    category: "Ventures",
+    year: "2025",
+    image: "/projects/teachify1611.jpg",
+    imagePosition: "object-center",
+    tagline: "Teach less admin. Inspire more. AI-powered LMS for schools.",
+    overview:
+      "A next-generation Learning Management System engineered for modern educators and institutions. Features intelligent automated lesson planning, AI grading sheets, and intuitive administrative tools to eliminate paperwork.",
+    disciplines: ["AI Integration", "LMS Architecture", "EdTech Platform", "UX/UI Design"],
+    metrics: "AI Classroom Engine Deployed",
+    statement: "Empowering educators through intelligent automation and human-centric design.",
+    link: "https://teachify-web-ai.vercel.app/",
+    modalImage: "/projects/teachify169.jpg",
+  },
+  {
+    id: "drivex-car-rental",
+    title: "DriveX Car Rental",
+    client: "DriveX • Global Mobility",
+    category: "Ventures",
+    year: "2024",
+    image: "/projects/drivex-showcase.png",
+    imagePosition: "object-center",
+    tagline: "Premium sports cars. Flexible rentals. A smarter way to move.",
+    overview:
+      "A complete car rental ecosystem featuring a sleek customer-facing digital flagship and a powerful administrative dashboard for managing fleet operations and reservations seamlessly.",
+    disciplines: ["Full-Stack Platform", "Dashboard Architecture", "System Engineering", "UX/UI Design"],
+    metrics: "Full System Deployed",
+    statement: "Engineering modern mobility through intuitive design and robust administration.",
+    link: "https://drivex-carrental.vercel.app/",
+  },
+  {
     id: "aurelia-atelier",
     title: "Aurelia Maison",
     client: "Aurelia Haute Horlogerie • Geneva",
@@ -53,22 +87,6 @@ export const SELECTED_WORKS: ProjectItem[] = [
     disciplines: ["Art Direction", "Digital Architecture", "WebGL Craft", "Private E-Commerce"],
     metrics: "100% Private Allocations Reserved",
     statement: "Crafting digital spaces that honor century-old tradition through contemporary restraint.",
-  },
-  {
-    id: "drivex-car-rental",
-    title: "DriveX Car Rental",
-    client: "DriveX • Global Mobility",
-    category: "Ventures",
-    year: "2024",
-    image: "/projects/drivex.png",
-    imagePosition: "object-top",
-    tagline: "Premium sports cars. Flexible rentals. A smarter way to move.",
-    overview:
-      "A complete car rental ecosystem featuring a sleek customer-facing digital flagship and a powerful administrative dashboard for managing fleet operations and reservations seamlessly.",
-    disciplines: ["Full-Stack Platform", "Dashboard Architecture", "System Engineering", "UX/UI Design"],
-    metrics: "Full System Deployed",
-    statement: "Engineering modern mobility through intuitive design and robust administration.",
-    link: "https://drivex-carrental.vercel.app/",
   },
   {
     id: "elysian-capital",
