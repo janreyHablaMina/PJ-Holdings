@@ -28,6 +28,15 @@ export interface ServicePillar {
   deliverables: string[];
 }
 
+export interface CoreMetric {
+  value: number;
+  label: string;
+  context: string;
+  prefix?: string;
+  suffix?: string;
+  minimumIntegerDigits?: number;
+}
+
 export const SELECTED_WORKS: ProjectItem[] = [
   {
     id: "aurelia-atelier",
@@ -226,9 +235,30 @@ export const ENDORSEMENTS = [
   },
 ];
 
-export const CORE_METRICS = [
-  { value: "€580M+", label: "Venture Valuation Created", context: "Across active portfolio & client holdings" },
-  { value: "08", label: "Annual Client Commissions", context: "Strictly limited to ensure uncompromising craft" },
-  { value: "100%", label: "Senior Leadership Involvement", context: "Zero delegation to junior external teams" },
-  { value: "12+", label: "Years of Collective Mastery", context: "Spanning London, Zurich, Milan & Tokyo" },
+export const CORE_METRICS: CoreMetric[] = [
+  {
+    value: 580,
+    prefix: "₱",
+    suffix: "M+",
+    label: "Venture Valuation Created",
+    context: "Across active portfolio & client holdings",
+  },
+  {
+    value: 8,
+    minimumIntegerDigits: 2,
+    label: "Annual Client Commissions",
+    context: "Strictly limited to ensure uncompromising craft",
+  },
+  {
+    value: 100,
+    suffix: "%",
+    label: "Senior Leadership Involvement",
+    context: "Zero delegation to junior external teams",
+  },
+  {
+    value: 12,
+    suffix: "+",
+    label: "Years of Collective Mastery",
+    context: "Spanning London, Zurich, Milan & Tokyo",
+  },
 ];

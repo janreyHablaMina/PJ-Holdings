@@ -121,7 +121,7 @@ export default function HeroSection() {
                         sizes="(min-width: 1024px) 48vw, 92vw"
                         className="object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/10 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent" />
                       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-6">
                         <div>
                           <p className="font-mono text-[10px] uppercase text-zinc-400">

@@ -1,12 +1,90 @@
 "use client";
 
-import { useState } from "react";
-import { ENDORSEMENTS, CORE_METRICS } from "@/data/agencyData";
+import { useEffect, useRef, useState } from "react";
+import { ENDORSEMENTS, CORE_METRICS, type CoreMetric } from "@/data/agencyData";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+
+const COUNTER_DURATION = 1400;
+
+function easeOutCubic(progress: number) {
+  return 1 - Math.pow(1 - progress, 3);
+}
+
+function MetricCounter({ metric, active }: { metric: CoreMetric; active: boolean }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frameId = 0;
+
+    if (reduceMotion) {
+      frameId = requestAnimationFrame(() => setCount(metric.value));
+      return () => cancelAnimationFrame(frameId);
+    }
+
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / COUNTER_DURATION, 1);
+      setCount(Math.round(metric.value * easeOutCubic(progress)));
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(tick);
+      }
+    };
+
+    frameId = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [active, metric.value]);
+
+  const formattedCount = count.toLocaleString("en-US", {
+    minimumIntegerDigits: metric.minimumIntegerDigits ?? 1,
+  });
+  const readableValue = `${metric.prefix ?? ""}${metric.value.toLocaleString("en-US", {
+    minimumIntegerDigits: metric.minimumIntegerDigits ?? 1,
+  })}${metric.suffix ?? ""}`;
+
+  return (
+    <span aria-label={readableValue}>
+      {metric.prefix}
+      {formattedCount}
+      {metric.suffix}
+    </span>
+  );
+}
 
 export default function TestimonialsMetrics() {
   const [activeQuote, setActiveQuote] = useState(0);
+  const [metricsActive, setMetricsActive] = useState(false);
+  const metricsRef = useRef<HTMLDivElement>(null);
   const current = ENDORSEMENTS[activeQuote];
+
+  useEffect(() => {
+    const section = metricsRef.current;
+
+    if (!section || metricsActive) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMetricsActive(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, [metricsActive]);
 
   const prev = () => {
     setActiveQuote((idx) => (idx === 0 ? ENDORSEMENTS.length - 1 : idx - 1));
@@ -20,11 +98,11 @@ export default function TestimonialsMetrics() {
     <section className="relative py-32 px-6 md:px-12 bg-[#08080a] luxury-border-t">
       <div className="max-w-7xl mx-auto">
         {/* Grounded Key Measures */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-24 border-b border-white/[0.06]">
+        <div ref={metricsRef} className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-24 border-b border-white/[0.06]">
           {CORE_METRICS.map((metric, i) => (
             <div key={i} className="flex flex-col">
               <span className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-mono tracking-tight">
-                {metric.value}
+                <MetricCounter metric={metric} active={metricsActive} />
               </span>
               <span className="text-xs sm:text-sm font-medium text-zinc-300 mt-3">
                 {metric.label}
