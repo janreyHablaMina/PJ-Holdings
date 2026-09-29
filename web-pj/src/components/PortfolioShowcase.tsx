@@ -68,7 +68,7 @@ export default function PortfolioShowcase() {
                     src={work.image}
                     alt={work.title}
                     fill
-                    className="object-cover object-center grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                    className={`object-cover ${work.imagePosition || 'object-center'} grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
@@ -143,7 +143,7 @@ export default function PortfolioShowcase() {
                 alt={activeProject.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 672px"
-                className="object-cover"
+                className={`object-cover ${activeProject.imagePosition || 'object-center'}`}
               />
             </div>
 
@@ -183,9 +183,19 @@ export default function PortfolioShowcase() {
 
             {/* Modal Bottom CTA */}
             <div className="pt-8 mt-8 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-xs text-zinc-400 font-mono">
-                PJ Holdings Commission Archive
-              </span>
+              <div className="text-xs text-zinc-400 font-mono flex items-center gap-6">
+                <span>PJ Holdings Commission Archive</span>
+                {activeProject.link && (
+                  <a
+                    href={activeProject.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-400 hover:text-amber-300 flex items-center gap-1"
+                  >
+                    Visit Live Site <ArrowUpRight className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
               <a
                 href="#inquiries"
                 onClick={() => setActiveProject(null)}

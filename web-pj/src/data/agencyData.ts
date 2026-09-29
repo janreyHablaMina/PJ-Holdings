@@ -10,6 +10,8 @@ export interface ProjectItem {
   disciplines: string[];
   metrics: string;
   statement: string;
+  link?: string;
+  imagePosition?: string;
 }
 
 export interface MonographPrinciple {
@@ -51,6 +53,22 @@ export const SELECTED_WORKS: ProjectItem[] = [
     disciplines: ["Art Direction", "Digital Architecture", "WebGL Craft", "Private E-Commerce"],
     metrics: "100% Private Allocations Reserved",
     statement: "Crafting digital spaces that honor century-old tradition through contemporary restraint.",
+  },
+  {
+    id: "drivex-car-rental",
+    title: "DriveX Car Rental",
+    client: "DriveX • Global Mobility",
+    category: "Ventures",
+    year: "2024",
+    image: "/projects/drivex.png",
+    imagePosition: "object-top",
+    tagline: "Premium sports cars. Flexible rentals. A smarter way to move.",
+    overview:
+      "A complete car rental ecosystem featuring a sleek customer-facing digital flagship and a powerful administrative dashboard for managing fleet operations and reservations seamlessly.",
+    disciplines: ["Full-Stack Platform", "Dashboard Architecture", "System Engineering", "UX/UI Design"],
+    metrics: "Full System Deployed",
+    statement: "Engineering modern mobility through intuitive design and robust administration.",
+    link: "https://drivex-carrental.vercel.app/",
   },
   {
     id: "elysian-capital",
