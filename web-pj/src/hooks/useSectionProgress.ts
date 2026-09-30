@@ -17,7 +17,7 @@ export function useSectionProgress() {
     const update = () => {
       frameId = 0;
       const scrollable = section.offsetHeight - window.innerHeight;
-      setProgress(motionPreference.matches || scrollable <= 0
+      setProgress(scrollable <= 0
         ? 0
         : Math.min(1, Math.max(0, -section.getBoundingClientRect().top / scrollable)));
     };
@@ -28,7 +28,7 @@ export function useSectionProgress() {
 
     const syncScrollListener = () => {
       window.removeEventListener("scroll", requestUpdate);
-      if (visible && !motionPreference.matches) {
+      if (visible ) {
         window.addEventListener("scroll", requestUpdate, { passive: true });
       }
       requestUpdate();

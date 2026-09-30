@@ -23,7 +23,7 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       aria-labelledby="hero-heading"
-      className="relative isolate h-[340vh] bg-[#08080a] motion-reduce:h-auto"
+      className="relative isolate h-[340vh] bg-[#08080a]"
     >
       <div className="sticky top-0 min-h-screen overflow-hidden px-6 pt-28 md:px-12 md:pt-32">
         <div
@@ -40,7 +40,7 @@ export default function HeroSection() {
                   <div
                     key={slide.number}
                     aria-hidden={activeIndex !== index}
-                    className={`col-start-1 row-start-1 transition-[opacity,transform,filter] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transform-none motion-reduce:filter-none motion-reduce:transition-none ${
+                    className={`col-start-1 row-start-1 transition-[opacity,transform,filter] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       activeIndex === index
                         ? "relative translate-y-0 opacity-100 blur-0 duration-700 delay-150"
                         : `pointer-events-none opacity-0 blur-[2px] duration-300 delay-0 ${index < activeIndex ? "-translate-y-5" : "translate-y-5"}`
@@ -75,7 +75,7 @@ export default function HeroSection() {
                   className="group inline-flex min-h-12 items-center gap-6 rounded-sm bg-zinc-100 px-6 py-3 text-xs font-medium text-zinc-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
                 >
                   Explore our work
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none" />
+                  <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
                 <a
                   href="#inquiries"
@@ -153,7 +153,7 @@ export default function HeroSection() {
                   {slides.map((slide, index) => (
                     <span
                       key={slide.number}
-                      className={`h-0.5 rounded-full transition-all duration-300 motion-reduce:transition-none ${index === activeIndex ? "w-7 bg-amber-200/80" : "w-2 bg-white/20"}`}
+                      className={`h-0.5 rounded-full transition-all duration-300 ${index === activeIndex ? "w-7 bg-amber-200/80" : "w-2 bg-white/20"}`}
                     />
                   ))}
                 </div>
