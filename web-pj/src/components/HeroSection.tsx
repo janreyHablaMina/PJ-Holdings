@@ -25,17 +25,17 @@ export default function HeroSection() {
       aria-labelledby="hero-heading"
       className="relative isolate h-[340vh] bg-[#08080a]"
     >
-      <div className="sticky top-0 min-h-screen overflow-hidden px-6 pt-28 md:px-12 md:pt-32">
+      <div className="sticky top-0 min-h-screen overflow-hidden px-6 pt-24 md:px-12 md:pt-32 flex flex-col">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_72%_28%,rgba(217,160,45,0.12),transparent_36%),radial-gradient(ellipse_at_18%_72%,rgba(20,184,166,0.09),transparent_34%)]"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#08080a] to-transparent" />
 
-        <div className="mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl flex-col justify-center">
-          <div className="grid items-center gap-10 pb-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-7xl flex-col justify-center grow">
+          <div className="grid items-center gap-6 pb-4 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
             <div className="relative z-10 max-w-2xl">
-              <div className="grid min-h-[236px] sm:min-h-[282px]">
+              <div className="grid min-h-[220px] sm:min-h-[282px]">
                 {slides.map((slide, index) => (
                   <div
                     key={slide.number}
@@ -46,48 +46,71 @@ export default function HeroSection() {
                         : `pointer-events-none opacity-0 blur-[2px] duration-300 delay-0 ${index < activeIndex ? "-translate-y-5" : "translate-y-5"}`
                     }`}
                   >
-                    <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase text-zinc-400 sm:text-[11px]">
+                    <p className="mb-4 sm:mb-7 flex items-center gap-3 font-mono text-[10px] uppercase text-zinc-400 sm:text-[11px]">
                       <span className="h-px w-8 shrink-0 bg-zinc-500" aria-hidden="true" />
                       {slide.kicker}
                     </p>
-                    <span className="mb-5 block font-mono text-[11px] text-zinc-500">
+                    <span className="mb-3 sm:mb-5 block font-mono text-[11px] text-zinc-500">
                       {slide.number} / {slide.metric}
                     </span>
                     <h1
                       id={activeIndex === index ? "hero-heading" : undefined}
-                      className="text-5xl font-light leading-none text-zinc-100 sm:text-6xl lg:text-7xl"
+                      className="text-4xl font-light leading-none text-zinc-100 sm:text-6xl lg:text-7xl"
                     >
                       {slide.title}
                       <span className="mt-2 block font-serif italic text-zinc-300">
                         {slide.accent}
                       </span>
                     </h1>
-                    <p className="mt-6 max-w-md text-sm font-light leading-relaxed text-zinc-400 sm:text-base">
+                    <p className="mt-4 max-w-md text-xs font-light leading-relaxed text-zinc-400 sm:text-base">
                       {slide.body}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5">
+              <div className="mt-5 sm:mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <a
                   href="#works"
-                  className="group inline-flex min-h-12 items-center gap-6 rounded-sm bg-zinc-100 px-6 py-3 text-xs font-medium text-zinc-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
+                  className="group inline-flex min-h-10 sm:min-h-12 items-center gap-4 sm:gap-6 rounded-sm bg-zinc-100 px-5 sm:px-6 py-2 sm:py-3 text-[11px] sm:text-xs font-medium text-zinc-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
                 >
                   Explore our work
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
                 <a
                   href="#inquiries"
-                  className="group inline-flex min-h-12 items-center gap-3 text-xs text-zinc-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
+                  className="group inline-flex min-h-10 sm:min-h-12 items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-zinc-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
                 >
                   Start a conversation
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-zinc-500 transition-colors group-hover:text-white" />
+                  <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-zinc-500 transition-colors group-hover:text-white" />
                 </a>
               </div>
             </div>
 
-            <div className="relative isolate min-h-[340px] sm:min-h-[420px] lg:min-h-[560px]">
+            {/* Mobile Swipeable Image Carousel */}
+            <div className="relative lg:hidden w-full -mx-6 px-6 sm:mx-0 sm:px-0">
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar">
+                {slides.map((slide) => (
+                  <div key={slide.image} className="relative shrink-0 snap-center w-[85%] sm:w-[60%] aspect-[4/3] rounded-sm overflow-hidden border border-white/15 bg-zinc-950">
+                    <Image
+                      src={slide.image}
+                      alt={slide.title}
+                      fill
+                      sizes="(max-width: 1024px) 85vw, 100vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-x-0 bottom-0 p-4 pointer-events-none">
+                      <p className="font-mono text-[9px] uppercase text-zinc-400 mb-1">{slide.number} / {slide.metric}</p>
+                      <p className="text-sm font-light text-white">{slide.kicker}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop 3D Orbit */}
+            <div className="relative isolate hidden lg:block min-h-[340px] sm:min-h-[420px] lg:min-h-[560px]">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-[12%] bottom-[13%] h-10 rounded-[50%] bg-black/60 blur-xl"
@@ -96,7 +119,6 @@ export default function HeroSection() {
                 className="absolute inset-0 isolate"
               >
                 {slides.map((slide, index) => {
-                  // A continuous orbit brings each image forward without reordering a deck.
                   const angle = ((index - galleryPosition) * Math.PI * 2) / slides.length;
                   const horizontal = Math.sin(angle);
                   const depth = (1 - Math.cos(angle)) / 2;
@@ -147,7 +169,7 @@ export default function HeroSection() {
                 })}
 
               </div>
-              <div className="absolute inset-x-0 bottom-1 flex items-center justify-center gap-4 font-mono text-[10px] uppercase text-zinc-500">
+              <div className="absolute inset-x-0 bottom-1 hidden lg:flex items-center justify-center gap-4 font-mono text-[10px] uppercase text-zinc-500">
                 <span className="motion-reduce:hidden">Scroll to explore</span>
                 <div aria-hidden="true" className="flex items-center gap-1.5">
                   {slides.map((slide, index) => (
