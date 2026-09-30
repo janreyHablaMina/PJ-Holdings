@@ -27,17 +27,41 @@ export default function HeroSection() {
       aria-labelledby="hero-heading"
       className="relative isolate h-[340vh] bg-[#08080a]"
     >
-      <div className="sticky top-0 min-h-screen overflow-hidden px-6 pt-24 md:px-12 md:pt-32 flex flex-col">
+      <div className="sticky top-0 h-[100dvh] min-h-screen overflow-hidden px-6 pt-24 md:px-12 md:pt-32 flex flex-col">
+        {/* Mobile Fading Background Images (Full 100vh) */}
+        <div className="absolute inset-0 z-[-5] block lg:hidden pointer-events-none w-full h-full">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.image}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                activeIndex === index ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={slide.image}
+                alt=""
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-[#08080a]/60" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#08080a]/90 via-transparent to-[#08080a]" />
+            </div>
+          ))}
+        </div>
+
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_72%_28%,rgba(217,160,45,0.12),transparent_36%),radial-gradient(ellipse_at_18%_72%,rgba(20,184,166,0.09),transparent_34%)]"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#08080a] to-transparent" />
 
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-7xl flex-col justify-center grow">
-          <div className="grid items-center gap-6 pb-4 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
-            {/* Desktop Text Container */}
-            <div className="relative z-10 max-w-2xl hidden lg:block">
+        <div className="mx-auto flex h-full min-h-[calc(100vh-6rem)] max-w-7xl flex-col justify-center grow">
+          <div className="grid h-full lg:h-auto items-stretch lg:items-center gap-6 pb-4 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+
+            {/* Unified Text Container (Fades on Scroll) */}
+            <div className="relative z-10 max-w-2xl w-full flex flex-col h-full lg:block pt-8 lg:pt-0">
               <div className="grid min-h-[236px] sm:min-h-[282px]">
                 {slides.map((slide, index) => (
                   <div
@@ -72,7 +96,7 @@ export default function HeroSection() {
                 ))}
               </div>
 
-              <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5">
+              <div className="mt-auto lg:mt-7 flex flex-wrap items-center gap-x-8 gap-y-5 pb-8 lg:pb-0">
                 <a
                   href="#works"
                   className="group inline-flex min-h-12 items-center gap-6 rounded-sm bg-zinc-100 px-6 py-3 text-xs font-medium text-zinc-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
@@ -88,66 +112,6 @@ export default function HeroSection() {
                   <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-zinc-500 transition-colors group-hover:text-white" />
                 </a>
               </div>
-            </div>
-
-            {/* Mobile Full-Screen Swipeable Cards */}
-            <div className="relative lg:hidden w-[calc(100%+3rem)] -mx-6 h-[85vh] min-h-[600px] flex overflow-x-auto snap-x snap-mandatory gap-0 hide-scrollbar -mt-12">
-              {slides.map((slide, index) => (
-                <div 
-                  key={slide.image} 
-                  className="relative shrink-0 snap-center w-full h-full flex flex-col justify-end px-6 pb-20 pt-32"
-                >
-                  {/* Background Image */}
-                  <div className="absolute inset-0 z-0">
-                    <Image
-                      src={slide.image}
-                      alt=""
-                      fill
-                      priority={index === 0}
-                      sizes="100vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/80 to-transparent" />
-                  </div>
-
-                  {/* Content Overlaid */}
-                  <div className="relative z-10 w-full max-w-2xl">
-                    <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase text-zinc-400 sm:text-[11px]">
-                      <span className="h-px w-8 shrink-0 bg-zinc-500" aria-hidden="true" />
-                      {slide.kicker}
-                    </p>
-                    <span className="mb-5 block font-mono text-[11px] text-zinc-500">
-                      {slide.number} / {slide.metric}
-                    </span>
-                    <h1 className="text-5xl font-light leading-none text-zinc-100 sm:text-6xl">
-                      {slide.title}
-                      <span className="mt-2 block font-serif italic text-zinc-300">
-                        {slide.accent}
-                      </span>
-                    </h1>
-                    <p className="mt-6 max-w-md text-sm font-light leading-relaxed text-zinc-400 sm:text-base">
-                      {slide.body}
-                    </p>
-
-                    <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5">
-                      <a
-                        href="#works"
-                        className="group inline-flex min-h-12 items-center gap-6 rounded-sm bg-zinc-100 px-6 py-3 text-xs font-medium text-zinc-950 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
-                      >
-                        Explore our work
-                        <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                      </a>
-                      <a
-                        href="#inquiries"
-                        className="group inline-flex min-h-12 items-center gap-3 text-xs text-zinc-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
-                      >
-                        Start a conversation
-                        <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-zinc-500 transition-colors group-hover:text-white" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
 
             {/* Desktop 3D Orbit */}
@@ -225,7 +189,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="border-t border-white/[0.08] pb-7 pt-5">
+          <div className="border-t border-white/[0.08] pb-7 pt-5 hidden lg:block">
             <div className="mb-4 flex items-center justify-between font-mono text-[10px] uppercase text-zinc-500">
               <span>Our expertise</span>
               <ArrowDown aria-hidden="true" className="h-3.5 w-3.5" />
