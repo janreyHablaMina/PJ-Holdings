@@ -64,7 +64,7 @@ export const SELECTED_WORKS: ProjectItem[] = [
     client: "DriveX • Global Mobility",
     category: "Ventures",
     year: "2024",
-    image: "/projects/drivex-showcase.png",
+    image: "/projects/DriveX1611.jpg",
     imagePosition: "object-center",
     tagline: "Premium sports cars. Flexible rentals. A smarter way to move.",
     overview:
