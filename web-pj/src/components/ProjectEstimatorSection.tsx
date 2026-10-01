@@ -2,58 +2,53 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { ArrowDownToLine, ArrowUpRight, Check, Compass, Globe2, Layers3, Sparkles } from "lucide-react";
-import { CAPABILITIES } from "@/data/agencyData";
+import { ArrowUpRight, Check, Copy, Send } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 
-const services = [
-  { title: "Launch a venture", description: "Shape an idea into a product with a clear direction and a plan to grow.", icon: Compass, capability: 0 },
-  { title: "Build a brand", description: "Create a distinctive identity, from positioning to the details people remember.", icon: Sparkles, capability: 1 },
-  { title: "Create an immersive experience", description: "Bring products and spaces to life through interactive 3D and motion.", icon: Layers3, capability: 2 },
-  { title: "Design a digital platform", description: "Build a website, online store, or portal around what your business needs.", icon: Globe2, capability: 3 },
-];
+const topics = ["A new project", "A collaboration", "Just saying hello"];
+
 const steps = [
   { title: "Choose your direction", detail: "Start with the service closest to your goal. We can explore the wider scope together." },
   { title: "Set the context", detail: "Tell us what you want to achieve, who it is for, and any timing or budget considerations." },
-  { title: "Bring a clearer brief", detail: "Save your project outline to share when you start a conversation with our team." },
+  { title: "Bring a clearer brief", detail: "Send us an email with your project outline to start a conversation with our team." },
 ];
-const fields = [
-  { name: "name", label: "Your name", type: "text", autoComplete: "name", required: true },
-  { name: "email", label: "Email address", type: "email", autoComplete: "email", required: true },
-  { name: "company", label: "Company / venture", type: "text", autoComplete: "organization", required: false },
-];
-const fieldClass = "w-full rounded-lg border border-white/10 bg-black/20 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-[#c8b58b] focus:outline-none focus:ring-1 focus:ring-[#c8b58b] transition-all duration-300";
+
+const fieldClass = "w-full rounded-lg border border-white/10 bg-[#08080a] px-4 py-3.5 text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors focus:border-[#c8b58b] focus:outline-none focus:ring-1 focus:ring-[#c8b58b]";
 const labelClass = "mb-2 block text-xs text-zinc-300";
 
 export default function ProjectEstimatorSection() {
-  const [selected, setSelected] = useState(3);
-  const [downloaded, setDownloaded] = useState(false);
-  const service = services[selected];
+  const [topic, setTopic] = useState(topics[0]);
+  const [message, setMessage] = useState("");
+  const [draft, setDraft] = useState("");
+  const [copyStatus, setCopyStatus] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function copyText(value: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyStatus(`${label} copied.`);
+    } catch {
+      setCopyStatus("Copy is unavailable. Please select and copy instead.");
+    }
+  }
+
+  function prepareEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const brief = [
-      "PJ HOLDINGS / PROJECT BRIEF", `Service: ${service.title}`,
-      `Name: ${data.get("name")}`, `Email: ${data.get("email")}`,
-      `Company: ${data.get("company") || "Not specified"}`,
-      `Target timeline: ${data.get("timeline")}`,
-      `Indicative budget (PHP): ${data.get("budget") || "To be discussed"}`,
-      "", "PROJECT GOALS", String(data.get("brief")),
-      "", "POTENTIAL SCOPE", ...CAPABILITIES[service.capability].deliverables.map((item) => `- ${item}`),
-      "", "Prepared locally. This brief has not been sent to PJ Holdings.",
+    const form = new FormData(event.currentTarget);
+    const body = [
+      `Hello PJ Holdings,`, "",
+      message.trim(), "",
+      `Name: ${String(form.get("name")).trim()}`,
+      `Email: ${form.get("email")}`,
+      `Company: ${String(form.get("company")).trim() || "Not specified"}`,
+      `Topic: ${topic}`
     ].join("\n");
-    const url = URL.createObjectURL(new Blob([brief], { type: "text/plain;charset=utf-8" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "pj-holdings-project-brief.txt";
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setDownloaded(true);
+    setDraft(body);
+    setCopyStatus("");
+    window.location.href = `mailto:janreydevmina@gmail.com?subject=${encodeURIComponent(`Let's talk: ${topic}`)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
-    <section id="inquiries" aria-labelledby="inquiries-title" className="relative overflow-hidden border-t border-white/[0.08] bg-[#08080a] px-6 py-20 md:px-12 lg:py-28">
+    <section id="inquiries" aria-labelledby="inquiries-title" className="relative overflow-hidden border-t border-white/[0.08] bg-[#0c0c0e] px-6 py-20 md:px-12 lg:py-28">
       <div aria-hidden="true" className="pointer-events-none absolute -left-48 top-0 h-[600px] w-[600px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(180,145,77,0.09),transparent_65%)]" />
       <div className="relative mx-auto max-w-7xl">
         <ScrollReveal animation="fade-up" className="mb-12 flex items-center gap-4">
@@ -62,7 +57,7 @@ export default function ProjectEstimatorSection() {
           <div className="h-px flex-1 bg-white/[0.08]" />
         </ScrollReveal>
 
-        <div className="grid items-start gap-12 lg:grid-cols-[0.85fr_1.4fr] lg:gap-20">
+        <div className="grid items-start gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <ScrollReveal animation="fade-right" className="space-y-10">
             <div>
               <h2 id="inquiries-title" className="max-w-lg text-4xl font-light leading-[1.12] tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl">
@@ -96,102 +91,63 @@ export default function ProjectEstimatorSection() {
                 Explore our capabilities <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
               </Link>
             </div>
-
-            <div className="border-t border-[#c8b58b]/20 pt-8">
-              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-[#c8b58b]">From possibility to purpose</p>
-              <p className="max-w-md text-3xl font-light leading-snug tracking-tight text-zinc-200 sm:text-4xl">
-                You bring the ambition.<br />
-                <span className="font-serif italic text-[#c8b58b]">Together, we give it form.</span>
-              </p>
-              <p className="mt-5 max-w-sm text-sm font-light leading-relaxed text-zinc-400">
-                A brand people remember. A product they enjoy using. A business ready for its next chapter. Let&apos;s start with what matters to you.
-              </p>
-            </div>
           </ScrollReveal>
 
           <ScrollReveal animation="fade-left" delay={150}>
-            <form onSubmit={handleSubmit} onChange={() => setDownloaded(false)} className="rounded-2xl border border-white/10 bg-[#111113] p-5 sm:p-8 shadow-2xl relative">
-              <div className="mb-7 flex items-start justify-between gap-4 border-b border-white/[0.08] pb-6">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-[#c8b58b]">Project planner</p>
-                  <h3 className="mt-2 text-xl font-light text-zinc-100">What would you like to build?</h3>
-                </div>
-                <span aria-hidden="true" className="font-serif text-4xl italic text-[#c8b58b]/40">PJ.</span>
-              </div>
+            <form onSubmit={prepareEmail} onChange={() => setDraft("")} className="rounded-2xl border border-white/10 bg-[#111113] p-5 sm:p-8">
               <fieldset>
-                <legend className="mb-4 text-xs text-zinc-400 font-mono uppercase tracking-wider">01 / Choose your focus</legend>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {services.map((item, index) => {
-                    const Icon = item.icon;
-                    const isSelected = selected === index;
-                    return (
-                      <label key={item.title} className="relative cursor-pointer">
-                        <input type="radio" name="service" value={item.title} checked={isSelected} onChange={() => setSelected(index)} className="peer sr-only" />
-                        <span className={`flex h-full flex-col rounded-xl border p-4 transition-all duration-300 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c8b58b] ${
-                          isSelected
-                            ? "border-[#c8b58b] bg-[#c8b58b]/[0.1] shadow-[0_0_20px_rgba(200,181,139,0.12)]"
-                            : "border-white/10 bg-black/20 hover:border-white/20 hover:bg-white/[0.02]"
-                        }`}>
-                          <span className="mb-4 flex items-center justify-between text-[#c8b58b]">
-                            <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.3} />
-                            <span className={`flex h-4 w-4 items-center justify-center rounded-full border transition-colors ${
-                              isSelected ? "border-[#c8b58b] bg-[#c8b58b] text-[#111113]" : "border-zinc-600"
-                            }`}>
-                              {isSelected && <Check aria-hidden="true" className="h-3 w-3 stroke-[3]" />}
-                            </span>
-                          </span>
-                          <span className="text-sm font-medium text-zinc-100">{item.title}</span>
-                          <span className="mt-2 text-xs leading-relaxed text-zinc-400">{item.description}</span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-                <div className="mt-4 border-l-2 border-[#c8b58b] py-2 pl-4 bg-gradient-to-r from-[#c8b58b]/[0.04] to-transparent rounded-r" aria-live="polite" aria-atomic="true">
-                  <p className="mb-1 text-[10px] uppercase tracking-widest text-[#c8b58b] font-mono">Your project could include</p>
-                  <p className="text-xs leading-relaxed text-zinc-300 font-light">{CAPABILITIES[service.capability].deliverables.join(" · ")}</p>
-                </div>
-              </fieldset>
-              <fieldset className="mt-8">
-                <legend className="mb-4 text-xs text-zinc-400 font-mono uppercase tracking-wider">02 / A little about your project</legend>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="project-budget" className={labelClass}>Budget in PHP <span className="text-zinc-500">(optional)</span></label>
-                    <input id="project-budget" name="budget" type="number" min="0" step="any" placeholder="e.g. 150000" className={fieldClass} />
-                  </div>
-                  <div>
-                    <label htmlFor="project-timeline" className={labelClass}>When would you like to start?</label>
-                    <select id="project-timeline" name="timeline" defaultValue="Flexible / exploring" className={`${fieldClass} scheme-dark cursor-pointer`}>
-                      {["Flexible / exploring", "As soon as possible", "Within 1–3 months", "Within 3–6 months", "More than 6 months"].map((option) => <option key={option}>{option}</option>)}
-                    </select>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <label htmlFor="project-brief" className={labelClass}>What would success look like? <span className="text-[#c8b58b]">*</span></label>
-                  <textarea id="project-brief" name="brief" required rows={4} placeholder="Tell us about your idea, your audience, and the problem you want to solve…" className={`${fieldClass} resize-y`} />
-                </div>
-              </fieldset>
-              <fieldset className="mt-7">
-                <legend className="mb-4 text-xs text-zinc-400 font-mono uppercase tracking-wider">03 / Introduce yourself</legend>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {fields.map(({ label, ...field }) => (
-                    <div key={field.name} className={field.name === "company" ? "sm:col-span-2" : ""}>
-                      <label htmlFor={`project-${field.name}`} className={labelClass}>{label} {field.required ? <span className="text-[#c8b58b]">*</span> : <span className="text-zinc-500">(optional)</span>}</label>
-                      <input {...field} id={`project-${field.name}`} className={fieldClass} />
-                    </div>
+                <legend className="mb-4 text-xs text-zinc-300">I&apos;m here for…</legend>
+                <div className="flex flex-wrap gap-2">
+                  {topics.map(item => (
+                    <label key={item} className="cursor-pointer">
+                      <input type="radio" name="topic" value={item} checked={topic === item} onChange={() => setTopic(item)} className="peer sr-only" />
+                      <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs text-zinc-400 transition-colors peer-checked:border-[#c8b58b]/60 peer-checked:bg-[#c8b58b]/10 peer-checked:text-[#decda9] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c8b58b]">
+                        {topic === item && <Check size={12} aria-hidden="true" />}
+                        {item}
+                      </span>
+                    </label>
                   ))}
                 </div>
               </fieldset>
-              <div className="mt-7 border-t border-white/[0.08] pt-6">
-                <button type="submit" className="group flex min-h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#c8b58b] px-5 py-3 text-sm font-medium text-[#111113] transition-all duration-300 hover:bg-[#dfcfab] hover:shadow-[0_0_25px_rgba(200,181,139,0.3)] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c8b58b]">
-                  <span>Save your project brief</span>
-                  <ArrowDownToLine aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+
+              <div className="mt-7 grid gap-5 sm:grid-cols-2">
+                <label className="block">
+                  <span className={labelClass}>Your name <span className="text-[#c8b58b]">*</span></span>
+                  <input name="name" required pattern=".*\S.*" maxLength={100} autoComplete="name" placeholder="Alex Santos" className={fieldClass} />
+                </label>
+                <label className="block">
+                  <span className={labelClass}>Email address <span className="text-[#c8b58b]">*</span></span>
+                  <input name="email" type="email" required maxLength={150} autoComplete="email" placeholder="alex@company.com" className={fieldClass} />
+                </label>
+                <label className="block sm:col-span-2">
+                  <span className={labelClass}>Company / venture <span className="text-zinc-500">(optional)</span></span>
+                  <input name="company" maxLength={120} autoComplete="organization" placeholder="Who are you building with?" className={fieldClass} />
+                </label>
+                <label className="block sm:col-span-2">
+                  <span className={labelClass}>What&apos;s on your mind? <span className="text-[#c8b58b]">*</span></span>
+                  <textarea name="message" required minLength={10} maxLength={1500} rows={5} value={message} onChange={e => { setMessage(e.target.value); e.target.setCustomValidity(e.target.value.trim().length < 10 ? "Tell us a little more (at least 10 characters)." : ""); }} placeholder="A little about your idea, your goals, or what you'd like to explore together…" className={`${fieldClass} resize-y`} />
+                  <span className="block text-right text-[10px] text-zinc-500">{message.length} / 1,500</span>
+                </label>
+              </div>
+
+              <div className="mt-7">
+                <button type="submit" className="group flex min-h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#d0bc91] px-5 py-3 text-sm font-medium text-[#111113] transition-all duration-300 hover:bg-[#dfcfab] hover:shadow-[0_0_25px_rgba(200,181,139,0.3)] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c8b58b]">
+                  <span>Prepare my email</span>
+                  <Send size={15} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </button>
-                <p className="mt-3 text-center text-[11px] leading-relaxed text-zinc-500">Download your outline to keep or share. This does not send an inquiry.</p>
-                {downloaded && (
-                  <p role="status" className="mt-2 text-center text-xs text-[#c8b58b] animate-in fade-in slide-in-from-bottom-1 font-mono">
-                    ✓ Your brief is ready. Check your downloads for the text file.
-                  </p>
+                <p className="mt-3 text-center text-[11px] leading-relaxed text-zinc-500">
+                  Opens a draft in your email app. Review it and press send there.<br />
+                  Your message is not submitted through this website.
+                </p>
+                {draft && (
+                  <div className="mt-5 rounded-lg border border-[#c8b58b]/30 bg-[#c8b58b]/5 p-4">
+                    <p role="status" className="text-sm text-[#decda9]">Your draft is ready. Send it from your email app.</p>
+                    <textarea aria-label="Prepared email draft" readOnly value={draft} rows={5} className={`${fieldClass} mt-3`} />
+                    <button type="button" onClick={() => copyText(draft, "Message")} className="mt-3 inline-flex min-h-10 items-center gap-2 text-xs text-[#c8b58b] hover:text-[#dfcfab]">
+                      <Copy size={13} aria-hidden="true" />Copy my message
+                    </button>
+                    <p role="status" className="mt-2 text-xs text-[#c8b58b]">{copyStatus}</p>
+                  </div>
                 )}
               </div>
             </form>
