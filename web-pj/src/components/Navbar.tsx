@@ -41,7 +41,7 @@ export default function Navbar() {
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 border-b border-white/[0.08] md:h-24">
         <a
-          href="#"
+          href="/"
           onClick={() => setMobileMenuOpen(false)}
           aria-label="PJ Holdings home"
           className="group flex shrink-0 items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100"
@@ -90,7 +90,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#inquiries"
+            href="/#inquiries"
             onClick={() => setMobileMenuOpen(false)}
             className="group mt-3 inline-flex min-h-11 items-center justify-between gap-6 rounded-sm border border-white/20 px-5 py-3 text-xs font-medium text-zinc-100 transition-colors hover:border-zinc-100 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 md:ml-3 md:mt-0"
           >

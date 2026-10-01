@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import { slides, disciplines } from "@/data/heroData";
 import { useSectionProgress } from "@/hooks/useSectionProgress";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
@@ -12,7 +11,6 @@ const clamp = (value: number, min: number, max: number) => {
 
 export default function HeroSection() {
   const { sectionRef, progress } = useSectionProgress();
-  const [mobileScroll, setMobileScroll] = useState(0);
 
   const sceneProgress = clamp(progress * slides.length - 0.5, 0, slides.length - 1);
   const segment = Math.floor(sceneProgress);
