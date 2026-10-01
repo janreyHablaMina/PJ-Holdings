@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MONOGRAPH_PRINCIPLES } from "@/data/agencyData";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
 

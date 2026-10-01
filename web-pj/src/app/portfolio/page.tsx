@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
 import { SELECTED_WORKS, type ProjectItem } from "@/data/agencyData";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const BANNER_IMAGES = [

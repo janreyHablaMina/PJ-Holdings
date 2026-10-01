@@ -250,13 +250,13 @@ export default function PortfolioShowcase() {
                   </a>
                 )}
               </div>
-              <a
+              <Link
                 href="/#inquiries"
                 onClick={() => setActiveProject(null)}
                 className="text-xs font-medium tracking-widest uppercase text-white hover:text-[#c8b58b] border-b border-white hover:border-[#c8b58b] pb-0.5 transition-colors"
               >
                 Inquire Concerning Similar Work
-              </a>
+              </Link>
             </div>
           </div>
         </div>
