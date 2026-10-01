@@ -101,7 +101,7 @@ body {
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Contact: quiet gold orbits and tactile conversation cards. */
+/* Contact: editorial typography and illuminated conversation starters. */
 .contact-eyebrow { font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #c8b58b; }
 .contact-primary, .contact-secondary { display: inline-flex; align-items: center; gap: 20px; min-height: 48px; border-radius: 6px; padding: 14px 22px; font-size: 12px; transition: background .25s, box-shadow .25s; }
 .contact-primary { background: #c8b58b; color: #111113; font-weight: 500; cursor: pointer; }
@@ -111,20 +111,16 @@ body {
 .contact-page :is(a, button, summary):focus-visible { outline: 2px solid #c8b58b; outline-offset: 5px; }
 .contact-label { display: block; font-size: 12px; color: #d4d4d8; }
 .contact-label :is(input, textarea) { display: block; margin-top: 10px; }
-.contact-hero-glow { position: absolute; pointer-events: none; inset: 0; background: radial-gradient(ellipse at 80% 40%, #c8b58b0d, transparent 55%); }
-.contact-orbit { position: relative; aspect-ratio: 1; background: radial-gradient(circle, #c8b58b0c, transparent 65%); }
-.contact-orbit-ring { position: absolute; border: 1px solid #c8b58b20; border-radius: 50%; }
-.contact-orbit-outer { inset: 4%; animation: contact-orbit-spin 40s linear infinite; }
-.contact-orbit-middle { inset: 15%; border-style: dashed; border-color: #c8b58b15; animation: contact-orbit-spin 60s linear infinite reverse; }
-.contact-orbit-inner { inset: 26%; border-color: #c8b58b25; }
-.contact-orbit-outer::after, .contact-orbit-middle::after { content: ""; position: absolute; left: 50%; top: -4px; width: 7px; height: 7px; border-radius: 50%; background: #c8b58b; box-shadow: 0 0 20px #c8b58b90; }
-.contact-orbit-middle::after { width: 5px; height: 5px; top: -3px; opacity: .6; }
-.contact-orbit-core { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.contact-orbit-label { position: absolute; display: flex; align-items: center; gap: 10px; border: 1px solid #c8b58b26; background: #111113; border-radius: 6px; padding: 13px 16px; font-size: 10px; color: #d0c3a8; box-shadow: 0 10px 30px #0005; animation: contact-float 6s ease-in-out infinite; }
-.contact-orbit-label:nth-last-child(2) { animation-delay: -3s; }
+.contact-banner { background: linear-gradient(180deg, #12110f 0%, #08080a 100%); }
+.contact-banner-light { position: absolute; z-index: -1; pointer-events: none; inset: -20%; background: radial-gradient(ellipse at 50% 28%, #c8b58b18, transparent 48%); animation: contact-light-drift 12s ease-in-out infinite alternate; }
+.contact-banner::after { content: ""; position: absolute; z-index: -1; pointer-events: none; inset: 0; background-image: linear-gradient(90deg, transparent calc(100% - 1px), #c8b58b06 1px); background-size: 12.5% 100%; mask-image: linear-gradient(transparent, #000 35%, transparent); }
+.contact-starter { position: relative; isolation: isolate; }
+.contact-starter::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(135deg, #c8b58b12, #c8b58b03); opacity: 0; transition: opacity .3s; }
+.contact-starter:hover::before, .contact-starter:focus-visible::before { opacity: 1; }
 .contact-entrance { animation: contact-enter .9s ease-out both; }
-@keyframes contact-orbit-spin { to { transform: rotate(360deg); } }
-@keyframes contact-float { 50% { transform: translateY(-8px); } }
+.contact-banner h1 { animation-delay: .1s; }
+.contact-banner h1 + p { animation-delay: .2s; }
+@keyframes contact-light-drift { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
 @keyframes contact-enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) {
   .contact-page *, .contact-page *::before, .contact-page *::after { animation: none !important; transition: none !important; }

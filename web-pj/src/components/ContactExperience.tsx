@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Check, Copy, Code2, Mail, MessageCircle, Plus, Send } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -42,33 +43,48 @@ export default function ContactExperience() {
 
   return (
     <>
-      <section aria-labelledby="contact-title" className="relative overflow-hidden px-6 pb-14 pt-36 md:px-12 md:pt-44 lg:pb-20">
-        <div aria-hidden="true" className="contact-hero-glow" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="mb-12 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-[#c8b58b]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#c8b58b]" /> Contact / A conversation away <span className="h-px flex-1 bg-white/10" />
+      <section aria-labelledby="contact-title" className="contact-banner relative isolate overflow-hidden px-6 pb-10 pt-32 md:px-12 md:pt-40 lg:pb-16 bg-[#08080a]">
+        <div className="absolute inset-0 z-0 pointer-events-none select-none">
+          <Image
+            src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2400&q=85"
+            alt="Atmospheric architecture"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-40 mix-blend-overlay contrast-125 saturate-50"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-[#08080a]/20" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(217,160,45,0.08),transparent_60%)]" />
+        </div>
+        <div aria-hidden="true" className="contact-banner-light relative z-10" />
+        <div className="relative z-10 mx-auto max-w-7xl">
+
+          <div className="py-14 text-center sm:py-20 lg:py-24">
+            <p className="contact-entrance mb-6 text-xs tracking-[0.12em] text-zinc-400">YOUR IDEAS HAVE A PLACE HERE.</p>
+            <h1 id="contact-title" className="contact-entrance text-[clamp(4.5rem,13vw,11rem)] font-light leading-[1.05] tracking-[-0.065em]">Let&apos;s <span className="font-serif italic text-[#c8b58b]">talk.</span></h1>
+            <p className="contact-entrance mx-auto mt-7 max-w-md text-sm font-light leading-relaxed text-zinc-400 sm:text-base">Something to build. Something to ask. Something to imagine together. We&apos;re listening.</p>
+            <a href="#connect" className="group mt-7 inline-flex min-h-11 items-center gap-3 text-xs text-[#d4c5a6] underline-offset-4 hover:underline">Explore our channels <ArrowDown aria-hidden="true" size={14} className="transition-transform group-hover:translate-y-1" /></a>
           </div>
-          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <p className="contact-entrance mb-5 text-sm text-zinc-400">Good things begin with a hello.</p>
-              <h1 id="contact-title" className="contact-entrance max-w-3xl text-6xl font-light leading-[1.02] tracking-[-0.055em] sm:text-7xl xl:text-[100px]">Let&apos;s make<br />something<br /><span className="font-serif italic text-[#c8b58b]">matter.</span></h1>
-              <p className="contact-entrance mt-7 max-w-md text-base font-light leading-relaxed text-zinc-400">A bold idea. A fresh perspective. Your next chapter. Wherever you are in the process, we&apos;d love to hear what&apos;s on your mind.</p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <a href="#message" className="contact-primary">Start a conversation <ArrowUpRight aria-hidden="true" size={17} /></a>
-                <a href="#connect" className="contact-secondary">Find your channel <ArrowDown aria-hidden="true" size={15} /></a>
-              </div>
-            </div>
-            <div className="contact-orbit mx-auto w-full max-w-[440px]" aria-hidden="true">
-              <div className="contact-orbit-ring contact-orbit-outer" />
-              <div className="contact-orbit-ring contact-orbit-middle" />
-              <div className="contact-orbit-ring contact-orbit-inner" />
-              <div className="contact-orbit-core"><span className="font-serif text-7xl italic text-[#c8b58b]">Hello.</span><span className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em] text-zinc-500">Possibility starts here</span></div>
-              <span className="contact-orbit-label left-[3%] top-[27%]"><Mail size={15} /> A little hello</span>
-              <span className="contact-orbit-label right-0 top-[58%]"><MessageCircle size={15} /> A bigger possibility</span>
-              <span className="absolute bottom-4 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-[0.25em] text-zinc-500">Ideas connect. Great things follow.</span>
+          <div className="contact-entrance">
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">Make the first move</p>
+            <div className="grid border-y border-[#c8b58b]/20 md:grid-cols-3">
+              {topics.map((item, index) => (
+                <a
+                  key={item}
+                  href="#message"
+                  onClick={() => { setTopic(item); setDraft(""); }}
+                  className="contact-starter group flex items-center gap-5 border-b border-[#c8b58b]/20 px-4 py-7 last:border-b-0 sm:px-6 md:border-b-0 md:border-r md:last:border-r-0"
+                >
+                  <span className="font-mono text-[10px] text-[#c8b58b]/60">0{index + 1}</span>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-light text-zinc-100 transition-colors group-hover:text-[#decda9]">{["I have a project", "Let's collaborate", "Just saying hello"][index]}</h2>
+                    <p className="mt-2 text-xs leading-relaxed text-zinc-500">{["Turn an idea into something real.", "Explore what we can do together.", "A simple introduction is enough."][index]}</p>
+                  </div>
+                  <ArrowUpRight aria-hidden="true" size={20} strokeWidth={1.3} className="shrink-0 text-[#c8b58b] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1" />
+                </a>
+              ))}
             </div>
           </div>
-          <div className="mt-16 flex flex-wrap justify-between gap-4 border-t border-white/10 pt-5 text-[10px] uppercase tracking-[0.18em] text-zinc-500"><span>Venture · Brand · Digital · Experience</span><span>One conversation. Endless possibilities.</span></div>
         </div>
       </section>
 
