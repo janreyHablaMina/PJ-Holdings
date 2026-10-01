@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -9,12 +9,29 @@ import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
 import { SELECTED_WORKS, type ProjectItem } from "@/data/agencyData";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+
+const BANNER_IMAGES = [
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
+  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=85",
+  "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=2400&q=85",
+  "https://images.unsplash.com/photo-1541881452423-f3689a7442ec?auto=format&fit=crop&w=2400&q=85"
+];
 
 const allCategories = ["All", "Ventures", "Digital Flagships", "Brand Identity", "Spatial Design"] as const;
 const allYears = ["All", "2025", "2024"] as const;
 const ITEMS_PER_PAGE = 6;
 
 export default function PortfolioPage() {
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveBannerIndex((prev) => (prev + 1) % BANNER_IMAGES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
@@ -77,14 +94,28 @@ export default function PortfolioPage() {
       <section className="relative pt-32 sm:pt-44 pb-24 px-6 md:px-12 border-b border-white/[0.08] bg-[#06070a] overflow-hidden">
         {/* Full-bleed Banner Image with Deep Black Gradients */}
         <div className="absolute inset-0 z-0 pointer-events-none select-none">
-          <Image
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85"
-            alt="Architectural structure"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center opacity-70 sm:opacity-80 scale-105 contrast-105"
-          />
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={activeBannerIndex}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                opacity: { duration: 1.5, ease: "easeInOut" },
+                scale: { duration: 8, ease: "linear" }
+              }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={BANNER_IMAGES[activeBannerIndex]}
+                alt="Architectural structure"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center opacity-70 sm:opacity-80 contrast-105"
+              />
+            </motion.div>
+          </AnimatePresence>
 
           {/* Targeted Black Gradients: Deep on left for text legibility, clear on right for image visibility */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#06070a]/95 via-[#06070a]/70 to-[#06070a]/20" />
