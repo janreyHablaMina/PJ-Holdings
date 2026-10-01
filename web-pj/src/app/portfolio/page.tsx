@@ -568,7 +568,7 @@ export default function PortfolioPage() {
                 )}
               </div>
               <Link
-                href="/#inquiries"
+                href="/contact"
                 onClick={() => setActiveProject(null)}
                 className="text-xs font-medium tracking-widest uppercase text-white hover:text-[#c8b58b] border-b border-white hover:border-[#c8b58b] pb-0.5 transition-colors"
               >

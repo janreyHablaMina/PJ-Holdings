@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { ArrowDownToLine, ArrowUpRight, Check, Compass, Globe2, Layers3, Sparkles } from "lucide-react";
 import { CAPABILITIES } from "@/data/agencyData";
@@ -91,9 +92,9 @@ export default function ProjectEstimatorSection() {
               <p className="mt-2 text-xs leading-relaxed text-zinc-400">
                 You do not need a finished plan. A challenge, an idea, or a clear ambition is enough to begin your brief.
               </p>
-              <a href="#capabilities" className="mt-5 inline-flex items-center gap-3 text-xs text-[#c8b58b] hover:text-white transition-colors">
+              <Link href="/#capabilities" className="mt-5 inline-flex items-center gap-3 text-xs text-[#c8b58b] hover:text-white transition-colors">
                 Explore our capabilities <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
-              </a>
+              </Link>
             </div>
 
             <div className="border-t border-[#c8b58b]/20 pt-8">
@@ -126,7 +127,7 @@ export default function ProjectEstimatorSection() {
                     return (
                       <label key={item.title} className="relative cursor-pointer">
                         <input type="radio" name="service" value={item.title} checked={isSelected} onChange={() => setSelected(index)} className="peer sr-only" />
-                        <span className={`flex h-full flex-col rounded-xl border p-4 transition-all duration-300 ${
+                        <span className={`flex h-full flex-col rounded-xl border p-4 transition-all duration-300 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c8b58b] ${
                           isSelected
                             ? "border-[#c8b58b] bg-[#c8b58b]/[0.1] shadow-[0_0_20px_rgba(200,181,139,0.12)]"
                             : "border-white/10 bg-black/20 hover:border-white/20 hover:bg-white/[0.02]"

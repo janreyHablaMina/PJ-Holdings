@@ -91,7 +91,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="/#inquiries"
+            href="/contact"
             onClick={() => setMobileMenuOpen(false)}
             className="group mt-3 inline-flex min-h-11 items-center justify-between gap-6 rounded-sm border border-white/20 px-5 py-3 text-xs font-medium text-zinc-100 transition-colors hover:border-zinc-100 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 md:ml-3 md:mt-0"
           >
