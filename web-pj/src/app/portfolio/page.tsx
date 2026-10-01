@@ -8,16 +8,18 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
 import { SELECTED_WORKS, type ProjectItem } from "@/data/agencyData";
-import { ArrowLeft, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
 
 const allCategories = ["All", "Ventures", "Digital Flagships", "Brand Identity", "Spatial Design"] as const;
 const allYears = ["All", "2025", "2024"] as const;
+const ITEMS_PER_PAGE = 6;
 
 export default function PortfolioPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Compute filtered projects based on category, year, and search query
   const filteredProjects = useMemo(() => {
@@ -48,10 +50,18 @@ export default function PortfolioPage() {
     });
   }, [searchQuery, selectedCategory, selectedYear]);
 
+  // Pagination calculation
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProjects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredProjects, currentPage]);
+
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedCategory("All");
     setSelectedYear("All");
+    setCurrentPage(1);
   };
 
   const isFiltered = searchQuery.trim() !== "" || selectedCategory !== "All" || selectedYear !== "All";
@@ -73,13 +83,13 @@ export default function PortfolioPage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center opacity-30 sm:opacity-35 scale-105 contrast-110 brightness-90"
+            className="object-cover object-center opacity-70 sm:opacity-80 scale-105 contrast-105"
           />
 
-          {/* Deep Black Gradients for Pure Legibility & Cinematic Mood */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#06070a] via-[#06070a]/90 to-[#06070a]/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-[#06070a]/80" />
-          <div className="absolute inset-0 bg-[#06070a]/40" />
+          {/* Targeted Black Gradients: Deep on left for text legibility, clear on right for image visibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#06070a]/95 via-[#06070a]/70 to-[#06070a]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-[#06070a]/20 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#06070a]/80 to-transparent" />
 
           {/* Subtle Ambient Radial Warmth */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(217,160,45,0.08),transparent_55%)]" />
@@ -117,12 +127,12 @@ export default function PortfolioPage() {
                   </span>
                 </div>
 
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light text-white tracking-[-0.02em] leading-[1.05]">
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light text-white tracking-[-0.02em] leading-[1.05] drop-shadow-lg">
                   Architectural <br />
-                  <span className="font-serif italic text-zinc-300">Commissions.</span>
+                  <span className="font-serif italic text-zinc-200">Commissions.</span>
                 </h1>
 
-                <p className="text-zinc-400 max-w-2xl text-base sm:text-lg font-light leading-relaxed mt-6">
+                <p className="text-zinc-300 max-w-2xl text-base sm:text-lg font-light leading-relaxed mt-6 drop-shadow-sm">
                   A permanent exhibition of venture incubations, high-complication digital flagships, and spatial
                   computing environments built with quiet authority and architectural permanence.
                 </p>
@@ -153,7 +163,7 @@ export default function PortfolioPage() {
 
                   <div className="p-5 bg-[#090a0d]/75 backdrop-blur-md">
                     <span className="block text-3xl font-light font-mono text-white tracking-tight">
-                      £1.2B+
+                      ₱1.2B+
                     </span>
                     <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
                       Client Capital
@@ -180,57 +190,14 @@ export default function PortfolioPage() {
       {/* ========================================================================= */}
       <main className="flex-1 py-16 px-6 md:px-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Interactive Search and Filter Toolbar */}
-          <ScrollReveal animation="fade-up" className="mb-14 space-y-6">
-            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg border border-white/10 bg-[#0d0e12] shadow-2xl">
-              {/* Search Bar Input */}
-              <div className="relative flex-1">
-                <Search className="w-4 h-4 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by title, client, keyword, or discipline (e.g. LMS, 3D, Horology)..."
-                  className="w-full pl-11 pr-10 py-3 rounded-md border border-white/5 bg-black/40 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-[#c8b58b] focus:ring-1 focus:ring-[#c8b58b] transition-all"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-white transition-colors cursor-pointer"
-                    aria-label="Clear search"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Year Filter Dropdown */}
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5 shrink-0">
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#c8b58b]" />
-                  Year:
-                </span>
-                <div className="flex items-center gap-1 bg-black/40 p-1 rounded-md border border-white/5">
-                  {allYears.map((year) => (
-                    <button
-                      key={year}
-                      onClick={() => setSelectedYear(year)}
-                      className={`px-3 py-1.5 rounded text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                        selectedYear === year
-                          ? "bg-white/15 text-white font-medium"
-                          : "text-zinc-400 hover:text-zinc-200"
-                      }`}
-                    >
-                      {year}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Category Filter Pills */}
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar">
+          {/* ========================================================================= */}
+          {/* OPEN, MINIMALIST FILTER & SEARCH ROW (ZERO CONTAINERS)                    */}
+          {/* ========================================================================= */}
+          <ScrollReveal animation="fade-up" className="mb-14 space-y-5">
+            {/* Top Row: Categories on Left, Minimalist Open Search on Right */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/[0.08] pb-1">
+              {/* Category Filter Tabs with Underline Indicator */}
+              <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto pb-2 text-xs font-mono tracking-widest uppercase hide-scrollbar">
                 {allCategories.map((cat) => {
                   const count =
                     cat === "All"
@@ -241,28 +208,81 @@ export default function PortfolioPage() {
                   return (
                     <button
                       key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-2 rounded-full text-xs font-mono tracking-wider uppercase transition-all duration-200 whitespace-nowrap cursor-pointer flex items-center gap-2 border ${
-                        isSelected
-                          ? "bg-[#c8b58b] text-black border-[#c8b58b] font-medium shadow-[0_0_20px_rgba(200,181,139,0.25)]"
-                          : "bg-white/[0.02] text-zinc-400 border-white/10 hover:border-white/25 hover:text-white"
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setCurrentPage(1);
+                      }}
+                      className={`pb-3 transition-all duration-300 whitespace-nowrap relative cursor-pointer group flex items-center gap-2 ${
+                        isSelected ? "text-white font-medium" : "text-zinc-400 hover:text-zinc-200"
                       }`}
                     >
                       <span>{cat}</span>
-                      <span
-                        className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                          isSelected ? "bg-black/20 text-black font-semibold" : "bg-white/5 text-zinc-500"
-                        }`}
-                      >
-                        {count}
+                      <span className={`text-[10px] ${isSelected ? "text-[#c8b58b]" : "text-zinc-500"}`}>
+                        ({count})
                       </span>
+                      {isSelected ? (
+                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#c8b58b] to-white transition-all duration-300" />
+                      ) : (
+                        <span className="absolute bottom-0 left-0 right-0 h-[1px] bg-transparent group-hover:bg-white/20 transition-all duration-300" />
+                      )}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Status & Reset button */}
-              <div className="flex items-center gap-4 text-xs font-mono text-zinc-400">
+              {/* Minimalist Open Search Line (No Box, Just Sleek Underline) */}
+              <div className="relative w-full md:w-80 border-b border-white/20 focus-within:border-[#c8b58b] transition-colors pb-3">
+                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-0 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Search commissions..."
+                  className="w-full pl-6 pr-6 bg-transparent text-xs font-mono text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setCurrentPage(1);
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Bottom Sub-row: Year Toggles & Live Result Counter */}
+            <div className="flex items-center justify-between gap-4 flex-wrap text-xs font-mono pt-1">
+              <div className="flex items-center gap-4 text-zinc-400">
+                <span className="text-[11px] uppercase tracking-wider text-zinc-500">Year:</span>
+                <div className="flex items-center gap-4">
+                  {allYears.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        setSelectedYear(year);
+                        setCurrentPage(1);
+                      }}
+                      className={`cursor-pointer transition-colors ${
+                        selectedYear === year
+                          ? "text-white font-medium underline underline-offset-4 decoration-[#c8b58b]"
+                          : "text-zinc-500 hover:text-zinc-300"
+                      }`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 text-zinc-400">
                 <span>
                   Showing <strong className="text-white">{filteredProjects.length}</strong> of {SELECTED_WORKS.length}
                 </span>
@@ -271,82 +291,137 @@ export default function PortfolioPage() {
                     onClick={handleResetFilters}
                     className="text-[#c8b58b] hover:text-white underline underline-offset-4 cursor-pointer transition-colors"
                   >
-                    Reset all filters
+                    Reset filters
                   </button>
                 )}
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Results Grid */}
+          {/* Results Grid (Paginated to 6 items per page) */}
           {filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-              {filteredProjects.map((work, index) => (
-                <ScrollReveal
-                  key={work.id}
-                  animation="fade-up"
-                  delay={(index % 3) * 80}
-                  className="h-full"
-                >
-                  <SpotlightCard
-                    onClick={() => setActiveProject(work)}
-                    className="group cursor-pointer flex flex-col justify-between h-full p-4 -m-4 rounded-lg hover:bg-white/[0.02] border border-transparent hover:border-white/10 transition-all duration-500"
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                {paginatedProjects.map((work, index) => (
+                  <ScrollReveal
+                    key={work.id}
+                    animation="fade-up"
+                    delay={(index % 3) * 80}
+                    className="h-full"
                   >
-                    <div>
-                      {/* Image Container with Restrained Zoom */}
-                      <div className="relative aspect-[16/11] w-full overflow-hidden rounded-sm luxury-border bg-[#101014] mb-6 shadow-lg group-hover:shadow-2xl transition-shadow duration-500">
-                        <Image
-                          src={work.image}
-                          alt={work.title}
-                          fill
-                          className={`object-cover ${work.imagePosition || "object-center"} grayscale-[15%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                    <SpotlightCard
+                      onClick={() => setActiveProject(work)}
+                      className="group cursor-pointer flex flex-col justify-between h-full p-4 -m-4 rounded-lg hover:bg-white/[0.02] border border-transparent hover:border-white/10 transition-all duration-500"
+                    >
+                      <div>
+                        {/* Image Container with Restrained Zoom */}
+                        <div className="relative aspect-[16/11] w-full overflow-hidden rounded-sm luxury-border bg-[#101014] mb-6 shadow-lg group-hover:shadow-2xl transition-shadow duration-500">
+                          <Image
+                            src={work.image}
+                            alt={work.title}
+                            fill
+                            className={`object-cover ${work.imagePosition || "object-center"} grayscale-[15%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
 
-                        {/* Corner Index Tag */}
-                        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 group-hover:text-white group-hover:border-white/30 transition-all duration-300">
-                          <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                          {/* Corner Index Tag */}
+                          <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 group-hover:text-white group-hover:border-white/30 transition-all duration-300">
+                            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                          </div>
+                        </div>
+
+                        {/* Typography Meta */}
+                        <div className="flex items-center justify-between text-[11px] font-mono tracking-widest text-[#c8b58b] uppercase mb-2">
+                          <span>{work.category}</span>
+                          <span className="text-zinc-500">{work.year}</span>
+                        </div>
+
+                        <h2 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-zinc-200 transition-colors">
+                          {work.title}
+                        </h2>
+
+                        <p className="text-xs sm:text-sm text-zinc-400 font-light mt-2 line-clamp-2 leading-relaxed">
+                          {work.tagline}
+                        </p>
+
+                        {/* Discipline Tags preview */}
+                        <div className="flex flex-wrap gap-1.5 mt-4">
+                          {work.disciplines.slice(0, 3).map((discipline) => (
+                            <span
+                              key={discipline}
+                              className="text-[10px] font-mono text-zinc-400 bg-white/[0.04] px-2 py-0.5 rounded border border-white/5"
+                            >
+                              {discipline}
+                            </span>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Typography Meta */}
-                      <div className="flex items-center justify-between text-[11px] font-mono tracking-widest text-[#c8b58b] uppercase mb-2">
-                        <span>{work.category}</span>
-                        <span className="text-zinc-500">{work.year}</span>
+                      {/* Disciplines Footer */}
+                      <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                        <span className="truncate max-w-[180px]">{work.client}</span>
+                        <span className="text-zinc-300 font-medium group-hover:text-[#c8b58b] transition-colors">
+                          {work.metrics}
+                        </span>
                       </div>
+                    </SpotlightCard>
+                  </ScrollReveal>
+                ))}
+              </div>
 
-                      <h2 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-zinc-200 transition-colors">
-                        {work.title}
-                      </h2>
+              {/* Minimalist Architectural Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-20 pt-8 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                  <button
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                      window.scrollTo({ top: 380, behavior: "smooth" });
+                    }}
+                    disabled={currentPage === 1}
+                    className={`inline-flex items-center gap-2.5 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                      currentPage === 1 ? "text-zinc-600 cursor-not-allowed" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>Previous</span>
+                  </button>
 
-                      <p className="text-xs sm:text-sm text-zinc-400 font-light mt-2 line-clamp-2 leading-relaxed">
-                        {work.tagline}
-                      </p>
+                  {/* Page Indicator Numbers */}
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => {
+                          setCurrentPage(pageNum);
+                          window.scrollTo({ top: 380, behavior: "smooth" });
+                        }}
+                        className={`w-9 h-9 rounded-sm font-mono text-xs flex items-center justify-center transition-all cursor-pointer ${
+                          currentPage === pageNum
+                            ? "bg-[#c8b58b] text-black font-semibold shadow-[0_0_15px_rgba(200,181,139,0.3)]"
+                            : "border border-white/10 text-zinc-400 hover:border-white/30 hover:text-white bg-white/[0.02]"
+                        }`}
+                      >
+                        0{pageNum}
+                      </button>
+                    ))}
+                  </div>
 
-                      {/* Discipline Tags preview */}
-                      <div className="flex flex-wrap gap-1.5 mt-4">
-                        {work.disciplines.slice(0, 3).map((discipline) => (
-                          <span
-                            key={discipline}
-                            className="text-[10px] font-mono text-zinc-400 bg-white/[0.04] px-2 py-0.5 rounded border border-white/5"
-                          >
-                            {discipline}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Disciplines Footer */}
-                    <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                      <span className="truncate max-w-[180px]">{work.client}</span>
-                      <span className="text-zinc-300 font-medium group-hover:text-[#c8b58b] transition-colors">
-                        {work.metrics}
-                      </span>
-                    </div>
-                  </SpotlightCard>
-                </ScrollReveal>
-              ))}
+                  <button
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                      window.scrollTo({ top: 380, behavior: "smooth" });
+                    }}
+                    disabled={currentPage === totalPages}
+                    className={`inline-flex items-center gap-2.5 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                      currentPage === totalPages ? "text-zinc-600 cursor-not-allowed" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    <span>Next</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             /* Empty State */
@@ -366,25 +441,6 @@ export default function PortfolioPage() {
               </button>
             </ScrollReveal>
           )}
-
-          {/* Bottom Inquiries CTA */}
-          <ScrollReveal animation="fade-up" className="mt-32 pt-12 border-t border-white/[0.08] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-gradient-to-r from-white/[0.02] to-transparent p-8 sm:p-12 rounded-sm border border-white/5">
-            <div>
-              <p className="text-[11px] font-mono tracking-widest text-[#c8b58b] uppercase mb-2">
-                Have a bespoke project in mind?
-              </p>
-              <h3 className="text-2xl sm:text-3xl font-light text-white">
-                Let&apos;s build your next <span className="font-serif italic text-zinc-300">category leader.</span>
-              </h3>
-            </div>
-            <Link
-              href="/#inquiries"
-              className="inline-flex items-center gap-4 px-8 py-4 rounded-sm bg-zinc-100 hover:bg-white text-zinc-950 font-medium text-xs tracking-wider uppercase transition-all duration-300 hover:shadow-[0_0_35px_rgba(200,181,139,0.25)] hover:scale-[1.02] active:scale-[0.98] shrink-0"
-            >
-              <span>Start a conversation</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </ScrollReveal>
         </div>
       </main>
 
