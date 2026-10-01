@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import SpotlightCard from "@/components/SpotlightCard";
 import { SELECTED_WORKS, type ProjectItem } from "@/data/agencyData";
-import { ArrowLeft, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles, Layers, ShieldCheck, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
 
 const allCategories = ["All", "Ventures", "Digital Flagships", "Brand Identity", "Spatial Design"] as const;
 const allYears = ["All", "2025", "2024"] as const;
@@ -56,28 +56,47 @@ export default function PortfolioPage() {
 
   const isFiltered = searchQuery.trim() !== "" || selectedCategory !== "All" || selectedYear !== "All";
 
-  // Featured flagships for banner preview
-  const featuredFlagships = SELECTED_WORKS.slice(0, 2);
-
   return (
     <div className="min-h-screen bg-[#06070a] text-zinc-100 flex flex-col selection:bg-amber-400 selection:text-black">
       {/* Floating Global Navbar */}
       <Navbar />
 
-      <main className="flex-1 pt-28 sm:pt-32 pb-24 px-6 md:px-12 relative overflow-hidden">
-        {/* Subtle ambient lighting effects */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(217,160,45,0.07),transparent_65%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute top-[700px] right-0 w-[600px] h-[600px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(20,184,166,0.04),transparent_60%)]"
-        />
+      {/* ========================================================================= */}
+      {/* OPEN, UNCONTAINED FULL-WIDTH HERO BANNER WITH ATMOSPHERIC IMAGE           */}
+      {/* ========================================================================= */}
+      <section className="relative pt-32 sm:pt-44 pb-24 px-6 md:px-12 border-b border-white/[0.08] bg-[#06070a] overflow-hidden">
+        {/* Full-bleed Banner Image with Deep Black Gradients */}
+        <div className="absolute inset-0 z-0 pointer-events-none select-none">
+          <Image
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85"
+            alt="Architectural structure"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-30 sm:opacity-35 scale-105 contrast-110 brightness-90"
+          />
+
+          {/* Deep Black Gradients for Pure Legibility & Cinematic Mood */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#06070a] via-[#06070a]/90 to-[#06070a]/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-[#06070a]/80" />
+          <div className="absolute inset-0 bg-[#06070a]/40" />
+
+          {/* Subtle Ambient Radial Warmth */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(217,160,45,0.08),transparent_55%)]" />
+
+          {/* Fine Blueprint Architectural Hairline Grid */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_20%,#000_60%,transparent_100%)]"
+          />
+        </div>
+
+        {/* Seamless Bottom Gradient Fade into Page Content */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#06070a] to-transparent z-[1]" />
 
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Breadcrumb Back Link */}
-          <ScrollReveal animation="fade-down" className="mb-6">
+          {/* Breadcrumb Navigation */}
+          <ScrollReveal animation="fade-down" className="mb-8">
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 text-xs font-mono tracking-widest uppercase text-zinc-400 hover:text-white transition-colors group"
@@ -87,143 +106,82 @@ export default function PortfolioPage() {
             </Link>
           </ScrollReveal>
 
-          {/* ========================================================================= */}
-          {/* CINEMATIC HERO SHOWCASE BANNER                                            */}
-          {/* ========================================================================= */}
-          <ScrollReveal animation="fade-up" className="mb-14">
-            <div className="relative rounded-2xl overflow-hidden luxury-border bg-[#0a0a0e] shadow-[0_20px_70px_rgba(0,0,0,0.8)] p-8 sm:p-12 lg:p-16">
-              {/* Atmospheric Background Image & Architectural Grids */}
-              <div className="absolute inset-0 z-0 pointer-events-none">
-                <Image
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=85"
-                  alt="Architectural facade"
-                  fill
-                  priority
-                  className="object-cover opacity-20 filter contrast-125 grayscale"
-                />
-                {/* Deep luxury gradient masks */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0e] via-[#0a0a0e]/90 to-[#0a0a0e]/60" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0e] via-transparent to-black/40" />
-                {/* Geometric blueprint grid overlay */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_20%,#000_70%,transparent_100%)]"
-                />
-              </div>
-
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-                {/* Left Column: Editorial Headline & Metrics */}
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c8b58b]/10 border border-[#c8b58b]/25 backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#c8b58b] animate-pulse" />
-                    <span className="text-[10px] font-mono tracking-[0.25em] text-[#c8b58b] uppercase">
-                      Architectural Index • 2024–2025
-                    </span>
-                  </div>
-
-                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-light text-white tracking-[-0.02em] leading-[1.08]">
-                    Selected Works &amp; <br className="hidden sm:inline" />
-                    <span className="font-serif italic text-zinc-300">Digital Flagships.</span>
-                  </h1>
-
-                  <p className="text-zinc-300 max-w-xl text-sm sm:text-base font-light leading-relaxed">
-                    A permanent directory of venture incubations, high-complication flagships, and spatial experiences
-                    commissioned for sovereign institutions and category innovators.
-                  </p>
-
-                  {/* Benchmark Stats Grid */}
-                  <div className="pt-4 grid grid-cols-3 gap-4 border-t border-white/[0.08] max-w-lg">
-                    <div>
-                      <span className="block text-2xl sm:text-3xl font-light font-mono text-white tracking-tight">
-                        0{SELECTED_WORKS.length}
-                      </span>
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
-                        Total Commissions
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="block text-2xl sm:text-3xl font-light font-mono text-[#c8b58b] tracking-tight">
-                        £1.2B+
-                      </span>
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
-                        Value Represented
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="block text-2xl sm:text-3xl font-light font-mono text-white tracking-tight">
-                        100%
-                      </span>
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
-                        Bespoke Build
-                      </span>
-                    </div>
-                  </div>
+          {/* Main Editorial Hero */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+            <div className="lg:col-span-8 space-y-6">
+              <ScrollReveal animation="fade-up">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c8b58b] animate-pulse" />
+                  <span className="text-[11px] font-mono tracking-[0.25em] text-[#c8b58b] uppercase">
+                    The Archive • 2024–2025 Index
+                  </span>
                 </div>
 
-                {/* Right Column: Layered Flagship Highlight Cards */}
-                <div className="lg:col-span-5 flex flex-col gap-4">
-                  <div className="text-[10px] font-mono tracking-widest text-[#c8b58b] uppercase flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-[#c8b58b]" />
-                      Featured Incubations
-                    </span>
-                    <span className="text-zinc-500">Live Deployments</span>
-                  </div>
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light text-white tracking-[-0.02em] leading-[1.05]">
+                  Architectural <br />
+                  <span className="font-serif italic text-zinc-300">Commissions.</span>
+                </h1>
 
-                  {/* Featured Mini Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5">
-                    {featuredFlagships.map((flagship) => (
-                      <div
-                        key={flagship.id}
-                        onClick={() => setActiveProject(flagship)}
-                        className="group relative flex items-center gap-4 p-3 rounded-xl border border-white/10 bg-black/40 hover:bg-black/60 hover:border-[#c8b58b]/40 transition-all duration-300 cursor-pointer shadow-lg backdrop-blur-md"
-                      >
-                        {/* Thumbnail */}
-                        <div className="relative w-20 h-14 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-zinc-900">
-                          <Image
-                            src={flagship.image}
-                            alt={flagship.title}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        </div>
-
-                        {/* Info */}
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-mono tracking-wider text-[#c8b58b] uppercase">
-                              {flagship.category}
-                            </span>
-                            <span className="text-[9px] font-mono text-zinc-500">• {flagship.year}</span>
-                          </div>
-                          <h4 className="text-sm font-medium text-white group-hover:text-zinc-200 transition-colors truncate">
-                            {flagship.title}
-                          </h4>
-                          <p className="text-[11px] text-zinc-400 truncate mt-0.5">{flagship.client}</p>
-                        </div>
-
-                        {/* Arrow Action */}
-                        <div className="w-7 h-7 rounded-full bg-white/[0.04] group-hover:bg-[#c8b58b] group-hover:text-black text-zinc-400 flex items-center justify-center shrink-0 transition-colors">
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <p className="text-[10px] font-mono text-zinc-500 text-center lg:text-left">
-                    Click any featured commission above to inspect architectural specifications.
-                  </p>
-                </div>
-              </div>
+                <p className="text-zinc-400 max-w-2xl text-base sm:text-lg font-light leading-relaxed mt-6">
+                  A permanent exhibition of venture incubations, high-complication digital flagships, and spatial
+                  computing environments built with quiet authority and architectural permanence.
+                </p>
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
 
-          {/* ========================================================================= */}
-          {/* INTERACTIVE SEARCH & FILTER TOOLBAR                                       */}
-          {/* ========================================================================= */}
-          <ScrollReveal animation="fade-up" delay={100} className="mb-12 space-y-6">
+            {/* Quick Metrics Bar on Right */}
+            <div className="lg:col-span-4">
+              <ScrollReveal animation="fade-left" delay={150}>
+                <div className="grid grid-cols-2 gap-px bg-white/[0.08] p-px rounded-sm luxury-border shadow-2xl overflow-hidden backdrop-blur-md">
+                  <div className="p-5 bg-[#090a0d]/75 backdrop-blur-md">
+                    <span className="block text-3xl font-light font-mono text-white tracking-tight">
+                      0{SELECTED_WORKS.length}
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
+                      Total Projects
+                    </span>
+                  </div>
+
+                  <div className="p-5 bg-[#090a0d]/75 backdrop-blur-md">
+                    <span className="block text-3xl font-light font-mono text-[#c8b58b] tracking-tight">
+                      100%
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
+                      Custom Crafted
+                    </span>
+                  </div>
+
+                  <div className="p-5 bg-[#090a0d]/75 backdrop-blur-md">
+                    <span className="block text-3xl font-light font-mono text-white tracking-tight">
+                      £1.2B+
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
+                      Client Capital
+                    </span>
+                  </div>
+
+                  <div className="p-5 bg-[#090a0d]/75 backdrop-blur-md">
+                    <span className="block text-3xl font-light font-mono text-[#c8b58b] tracking-tight">
+                      4
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-1 block">
+                      Disciplines
+                    </span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* MAIN GALLERY & INTERACTIVE SEARCH CONTENT                                 */}
+      {/* ========================================================================= */}
+      <main className="flex-1 py-16 px-6 md:px-12 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Interactive Search and Filter Toolbar */}
+          <ScrollReveal animation="fade-up" className="mb-14 space-y-6">
             <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg border border-white/10 bg-[#0d0e12] shadow-2xl">
               {/* Search Bar Input */}
               <div className="relative flex-1">
@@ -320,9 +278,7 @@ export default function PortfolioPage() {
             </div>
           </ScrollReveal>
 
-          {/* ========================================================================= */}
-          {/* RESULTS GRID                                                              */}
-          {/* ========================================================================= */}
+          {/* Results Grid */}
           {filteredProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
               {filteredProjects.map((work, index) => (
